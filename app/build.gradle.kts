@@ -93,4 +93,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.core.splashscreen)
     implementation(libs.androidx.glance.appwidget)
+
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
