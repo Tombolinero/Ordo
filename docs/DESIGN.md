@@ -1,4 +1,4 @@
-# Design-Spezifikation – Referenz-App (Dark / Dot-Matrix / Soft-3D)
+# Design-Spezifikation (Referenz-Design)
 
 Abgeleitet aus 5 Referenzbildern (Analytics-Screen, Karten-Grid, Gesamtansicht,
 „Hiking Trip"-Screen, Style-Guide). Maße sind geschätzt und auf einen
