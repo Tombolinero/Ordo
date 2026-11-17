@@ -147,6 +147,10 @@ object BackupArchive {
             }
         } catch (e: ZipException) {
             throw BackupException.NotABackup(e)
+        } catch (e: java.io.EOFException) {
+            throw BackupException.Corrupted("file is incomplete", e)
+        } catch (e: java.io.IOException) {
+            throw BackupException.Corrupted("file could not be read", e)
         }
 
         val mBytes = manifestBytes ?: throw BackupException.NotABackup()

@@ -11,6 +11,8 @@ android {
 
 dependencies {
     api(project(":core:model"))
+    api(libs.room.runtime)
+    api(libs.room.ktx)
     implementation(libs.kotlinx.coroutines.core)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)

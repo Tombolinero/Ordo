@@ -45,6 +45,15 @@ class BackupArchiveTest {
         assertThrows(BackupException.Corrupted::class.java) { read(zip) }
     }
 
+    @Test fun `truncated file is reported as damaged`() {
+        val bytes = Fixtures.write()
+        // Cuts into the content. (Losing only the trailing ZIP directory is harmless: every
+        // entry is still complete and checksum-verified, so that file reads fine.)
+        for (cut in listOf(bytes.size / 4, bytes.size / 2, bytes.size * 3 / 4)) {
+            assertThrows(BackupException::class.java) { read(bytes.copyOf(cut)) }
+        }
+    }
+
     @Test fun `random file is not a backup`() {
         assertThrows(BackupException::class.java) { read("hello, this is a holiday photo".toByteArray()) }
         assertThrows(BackupException.NotABackup::class.java) { read(Fixtures.zip("readme.txt" to "hi".toByteArray())) }
