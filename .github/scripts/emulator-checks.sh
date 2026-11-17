@@ -47,8 +47,10 @@ instrument flow -e class io.github.tombolinero.ordo.OrdoFlowTest -e ordoDemo tru
 RESULT=$?
 set -e
 sleep 2
-kill -INT $REC 2>/dev/null || true
-sleep 3
+# Stop the recorder on the device so it finalises the MP4 properly.
+adb shell pkill -INT screenrecord || true
+wait $REC 2>/dev/null || true
+sleep 2
 adb pull /sdcard/ordo-demo.mp4 out/ordo-demo.mp4 || true
 adb exec-out screencap -p > out/last-screen.png || true
 echo "::endgroup::"
