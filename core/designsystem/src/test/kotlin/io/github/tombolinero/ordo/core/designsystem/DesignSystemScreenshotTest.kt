@@ -79,10 +79,12 @@ class DesignSystemScreenshotTest {
                     OrdoToggle(true, {})
                     OrdoToggle(false, {})
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    listOf(PillowStyle.Graphite, PillowStyle.Magenta, PillowStyle.Violet, PillowStyle.Gold).forEach { s ->
-                        PillowSurface(Modifier.size(78.dp, 96.dp), style = s, shape = OrdoShapes.CardSmall) {
-                            Text(s.name, Modifier.padding(12.dp), style = OrdoTheme.type.label, color = s.contentColor())
+                PillowStyle.entries.chunked(3).forEach { row ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        row.forEach { s ->
+                            PillowSurface(Modifier.size(108.dp, 76.dp), style = s, shape = OrdoShapes.CardSmall) {
+                                Text(s.name, Modifier.padding(12.dp), style = OrdoTheme.type.label, color = s.contentColor())
+                            }
                         }
                     }
                 }

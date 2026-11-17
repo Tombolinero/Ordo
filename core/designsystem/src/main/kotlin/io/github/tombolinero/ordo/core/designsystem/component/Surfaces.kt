@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.foundation.border
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,35 +30,14 @@ import io.github.tombolinero.ordo.core.designsystem.theme.OrdoPalette
 import kotlin.math.hypot
 import kotlin.math.max
 
-/** Surface finishes of the reference design. Stored per list as its card colour. */
+/** Surface finishes of the cards. Every list picks one as its card colour. */
 @Immutable
-enum class PillowStyle { Graphite, Magenta, Violet, Gold, Ruby, Petrol, Cobalt, Pearl }
+enum class PillowStyle { Graphite, Magenta, Violet, Ruby, Cobalt, Petrol }
 
-/** Content colour that reads well on each [PillowStyle]. */
-fun PillowStyle.contentColor(): Color = when (this) {
-    PillowStyle.Gold -> OrdoPalette.YellowInk
-    PillowStyle.Pearl -> Color(0xFF16141B)
-    else -> Color.White
-}
+/** Text on cards is always white; the secondary line is slightly dimmed. */
+fun PillowStyle.contentColor(): Color = Color.White
 
-fun PillowStyle.secondaryContentColor(): Color = contentColor().copy(alpha = if (isLight) 0.62f else 0.66f)
-
-val PillowStyle.isLight: Boolean get() = this == PillowStyle.Gold || this == PillowStyle.Pearl
-
-/** Colour of the soft outer glow when glow is tinted. */
-fun PillowStyle.glowColor(): Color = when (this) {
-    PillowStyle.Graphite -> Color.White
-    PillowStyle.Magenta -> OrdoPalette.PurpleLight
-    PillowStyle.Violet -> OrdoPalette.Violet
-    PillowStyle.Gold -> OrdoPalette.Yellow
-    PillowStyle.Ruby -> Color(0xFFE2475A)
-    PillowStyle.Petrol -> Color(0xFF19B3A3)
-    PillowStyle.Cobalt -> Color(0xFF4A7CF0)
-    PillowStyle.Pearl -> Color.White
-}
-
-/** Accent that stays visible on the surface (yellow everywhere except on the yellow card). */
-fun PillowStyle.accentColor(): Color = if (isLight) OrdoPalette.YellowInk else OrdoPalette.Yellow
+fun PillowStyle.secondaryContentColor(): Color = Color.White.copy(alpha = 0.66f)
 
 private fun Modifier.pillowFill(style: PillowStyle): Modifier = drawWithCache {
     val w = size.width
@@ -114,66 +91,9 @@ private fun Modifier.pillowFill(style: PillowStyle): Modifier = drawWithCache {
             center = Offset(w * 0.5f, h * 0.45f),
             radius = max(w, h) * 0.78f,
         )
-        PillowStyle.Pearl -> Brush.radialGradient(
-            0f to Color(0xFFFFFFFF),
-            0.3f to Color(0xFFEDEBF0),
-            0.75f to Color(0xFFBFBAC7),
-            1f to Color(0xFF8E8998),
-            center = Offset(w * 0.2f, h * 0.1f),
-            radius = diag,
-        )
-        PillowStyle.Gold -> Brush.radialGradient(
-            0f to OrdoPalette.YellowLight,
-            0.45f to OrdoPalette.Yellow,
-            1f to OrdoPalette.YellowDeep,
-            center = Offset(w * 0.4f, 0f),
-            radius = diag * 0.9f,
-        )
     }
-    onDrawBehind {
-        drawRect(brush)
-        if (style == PillowStyle.Gold) drawDotTexture(OrdoPalette.YellowInk.copy(alpha = 0.16f), 7.dp.toPx(), 1.1.dp.toPx())
-    }
+    onDrawBehind { drawRect(brush) }
 }
-
-private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawDotTexture(color: Color, spacing: Float, radius: Float) {
-    val points = ArrayList<Offset>()
-    var y = spacing / 2
-    while (y < size.height) {
-        var x = spacing / 2
-        while (x < size.width) {
-            points += Offset(x, y)
-            x += spacing
-        }
-        y += spacing
-    }
-    drawPoints(points, PointMode.Points, color, strokeWidth = radius * 2, cap = StrokeCap.Round)
-}
-
-/** Soft light that bleeds from a surface into the black background. */
-@Immutable
-data class SurfaceGlow(
-    val radius: Dp = 0.dp,
-    val alpha: Float = 0f,
-    val tinted: Boolean = false,
-    val rim: Boolean = false,
-) {
-    companion object {
-        val None = SurfaceGlow()
-    }
-}
-
-val LocalSurfaceGlow = staticCompositionLocalOf { SurfaceGlow.None }
-
-internal fun Modifier.surfaceGlow(glow: SurfaceGlow, shape: Shape, tint: Color): Modifier =
-    if (glow.alpha <= 0f) this else dropShadow(shape, Shadow(radius = glow.radius, color = (if (glow.tinted) tint else Color.White).copy(alpha = glow.alpha)))
-
-internal fun Modifier.surfaceRim(glow: SurfaceGlow, shape: Shape): Modifier =
-    if (!glow.rim) this else border(
-        1.dp,
-        Brush.linearGradient(listOf(Color.White.copy(alpha = 0.22f), Color.White.copy(alpha = 0.03f), Color.White.copy(alpha = 0.08f))),
-        shape,
-    )
 
 /**
  * The soft, inflated card of the reference design: gradient fill lit from the top left,
@@ -187,16 +107,13 @@ fun PillowSurface(
     elevation: Dp = 14.dp,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val glow = LocalSurfaceGlow.current
     Box(
         modifier
-            .surfaceGlow(glow, shape, style.glowColor())
             .dropShadow(shape, Shadow(radius = elevation * 2, color = Color.Black.copy(alpha = 0.7f), offset = DpOffset(0.dp, elevation * 0.7f)))
             .clip(shape)
             .pillowFill(style)
             .innerShadow(shape, Shadow(radius = 2.dp, color = Color.White.copy(alpha = if (style == PillowStyle.Graphite) 0.07f else 0.16f), offset = DpOffset(1.dp, 1.dp)))
-            .innerShadow(shape, Shadow(radius = 18.dp, color = Color.Black.copy(alpha = if (style.isLight) 0.10f else 0.22f), offset = DpOffset((-4).dp, (-6).dp)))
-            .surfaceRim(glow, shape),
+            .innerShadow(shape, Shadow(radius = 18.dp, color = Color.Black.copy(alpha = 0.22f), offset = DpOffset((-4).dp, (-6).dp))),
         content = content,
     )
 }

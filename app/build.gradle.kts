@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.ordo.android.application)
     alias(libs.plugins.ordo.android.compose)
+    alias(libs.plugins.ordo.screenshot)
 }
 
 /**

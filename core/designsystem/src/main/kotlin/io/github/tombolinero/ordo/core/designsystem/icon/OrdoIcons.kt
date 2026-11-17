@@ -19,12 +19,6 @@ object OrdoIcons {
     /** Gear with eight rounded teeth around a hub. */
     val Settings = line("settings", gearPath(), "M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6Z")
 
-    /** Alternative settings glyph: two sliders. */
-    val Tune = line(
-        "tune",
-        "M4 7h8M17 7h3", "M14.5 4.8a2.2 2.2 0 1 0 0 4.4a2.2 2.2 0 1 0 0-4.4Z",
-        "M4 17h3M12 17h8", "M9.5 14.8a2.2 2.2 0 1 0 0 4.4a2.2 2.2 0 1 0 0-4.4Z",
-    )
     val Search = line("search", "M11 4.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13Z", "M20 20l-4-4")
     val Share = line("share", "M12 15V4M8 7.5 12 4l4 3.5", "M5 13v5.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V13")
     val Sort = line("sort", "M7 4v16M3.5 16.5 7 20l3.5-3.5", "M17 20V4M13.5 7.5 17 4l3.5 3.5")

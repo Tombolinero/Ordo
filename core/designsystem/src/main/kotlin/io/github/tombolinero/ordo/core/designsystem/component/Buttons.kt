@@ -60,16 +60,13 @@ fun GlassIconButton(
 ) {
     val interaction = remember { MutableInteractionSource() }
     val haptics = LocalHapticFeedback.current
-    val glow = LocalSurfaceGlow.current
     Box(
         modifier
             .size(size)
             .pressScale(interaction, 0.92f)
-            .surfaceGlow(glow, CircleShape, if (highlighted) OrdoPalette.Yellow else Color.White)
             .dropShadow(CircleShape, Shadow(radius = 14.dp, color = Color.Black.copy(alpha = 0.75f), offset = DpOffset(0.dp, 6.dp)))
             .clip(CircleShape)
             .glassFill(highlighted)
-            .surfaceRim(glow, CircleShape)
             .clickable(interaction, indication = null, enabled = enabled, role = Role.Button) {
                 haptics.performHapticFeedback(HapticFeedbackType.ContextClick)
                 onClick()
@@ -198,16 +195,13 @@ fun GlassPillButton(
         accent -> OrdoPalette.YellowInk
         else -> Color.White
     }
-    val glow = LocalSurfaceGlow.current
     Row(
         modifier
             .height(48.dp)
             .pressScale(interaction)
-            .surfaceGlow(glow, OrdoShapes.Pill, if (accent) OrdoPalette.Yellow else Color.White)
             .dropShadow(OrdoShapes.Pill, Shadow(radius = 14.dp, color = Color.Black.copy(alpha = 0.6f), offset = DpOffset(0.dp, 6.dp)))
             .clip(OrdoShapes.Pill)
             .then(if (accent) Modifier.dotPillCenter() else Modifier.glassFill(false))
-            .surfaceRim(glow, OrdoShapes.Pill)
             .clickable(interaction, indication = null, enabled = enabled, role = Role.Button) {
                 haptics.performHapticFeedback(HapticFeedbackType.ContextClick)
                 onClick()

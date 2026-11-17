@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ordo logo "Wendeltreppe": three arcs that grow outwards and turn, a stylised spiral staircase seen from above. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Scaled into the launcher safe zone: about 64 % of the visible 72 dp. -->
+    <group android:pivotX="54" android:pivotY="54" android:scaleX="0.74" android:scaleY="0.74">
+        <path android:pathData="M54.000,44.000 A10,10 0 1,1 44.489,57.090" android:fillColor="#00000000" android:strokeWidth="6.5" android:strokeLineCap="round">
+            <aapt:attr name="android:strokeColor">
+                <gradient android:type="linear" android:startX="30" android:startY="26" android:endX="80" android:endY="84">
+                    <item android:offset="0" android:color="#FFFFF06A" />
+                    <item android:offset="0.45" android:color="#FFF6D818" />
+                    <item android:offset="1" android:color="#FFD9BC0C" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path android:pathData="M71.854,47.502 A19,19 0 1,1 42.302,39.028" android:fillColor="#00000000" android:strokeWidth="6.5" android:strokeLineCap="round">
+            <aapt:attr name="android:strokeColor">
+                <gradient android:type="linear" android:startX="30" android:startY="26" android:endX="80" android:endY="84">
+                    <item android:offset="0" android:color="#FFFFF06A" />
+                    <item android:offset="0.45" android:color="#FFF6D818" />
+                    <item android:offset="1" android:color="#FFD9BC0C" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path android:pathData="M71.998,75.449 A28,28 0 1,1 68.838,30.255" android:fillColor="#00000000" android:strokeWidth="6.5" android:strokeLineCap="round">
+            <aapt:attr name="android:strokeColor">
+                <gradient android:type="linear" android:startX="30" android:startY="26" android:endX="80" android:endY="84">
+                    <item android:offset="0" android:color="#FFFFF06A" />
+                    <item android:offset="0.45" android:color="#FFF6D818" />
+                    <item android:offset="1" android:color="#FFD9BC0C" />
+                </gradient>
+            </aapt:attr>
+        </path>
+    </group>
+</vector>
