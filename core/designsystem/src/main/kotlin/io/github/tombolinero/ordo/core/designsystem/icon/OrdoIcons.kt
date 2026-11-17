@@ -16,10 +16,14 @@ object OrdoIcons {
     val Back = line("back", "M19 12H5M11 6l-6 6 6 6")
     val Plus = line("plus", "M12 5v14M5 12h14")
     val Lists = line("lists", "M3 7.5V18a1.5 1.5 0 0 0 1.5 1.5h15A1.5 1.5 0 0 0 21 18V9.5A1.5 1.5 0 0 0 19.5 8H12l-2-2.5H4.5A1.5 1.5 0 0 0 3 7Z")
-    val Settings = line(
-        "settings",
-        "M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6Z",
-        "M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7",
+    /** Gear with eight rounded teeth around a hub. */
+    val Settings = line("settings", gearPath(), "M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6Z")
+
+    /** Alternative settings glyph: two sliders. */
+    val Tune = line(
+        "tune",
+        "M4 7h8M17 7h3", "M14.5 4.8a2.2 2.2 0 1 0 0 4.4a2.2 2.2 0 1 0 0-4.4Z",
+        "M4 17h3M12 17h8", "M9.5 14.8a2.2 2.2 0 1 0 0 4.4a2.2 2.2 0 1 0 0-4.4Z",
     )
     val Search = line("search", "M11 4.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13Z", "M20 20l-4-4")
     val Share = line("share", "M12 15V4M8 7.5 12 4l4 3.5", "M5 13v5.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V13")
@@ -57,6 +61,27 @@ object OrdoIcons {
 
     val More = dots("more", listOf(12f to 5f, 12f to 12f, 12f to 19f), 1.8f)
     val Grip = dots("grip", listOf(9f to 6f, 15f to 6f, 9f to 12f, 15f to 12f, 9f to 18f, 15f to 18f), 1.55f)
+
+    private fun gearPath(teeth: Int = 8, outer: Float = 9.6f, inner: Float = 7.3f): String {
+        fun pt(deg: Double, r: Float): String {
+            val a = Math.toRadians(deg - 90)
+            return "%.3f %.3f".format(java.util.Locale.ROOT, 12 + r * kotlin.math.cos(a), 12 + r * kotlin.math.sin(a))
+        }
+        val step = 360.0 / teeth
+        val tipHalf = step * 0.2
+        val baseHalf = step * 0.31
+        return buildString {
+            for (i in 0 until teeth) {
+                val c = i * step
+                append(if (i == 0) "M" else "L").append(pt(c - baseHalf, inner))
+                append(" L").append(pt(c - tipHalf, outer))
+                append(" L").append(pt(c + tipHalf, outer))
+                append(" L").append(pt(c + baseHalf, inner))
+                append(" A$inner $inner 0 0 1 ").append(pt(c + step - baseHalf, inner)).append(' ')
+            }
+            append("Z")
+        }
+    }
 
     private fun line(name: String, vararg paths: String): ImageVector =
         ImageVector.Builder(name, 24.dp, 24.dp, 24f, 24f).apply {

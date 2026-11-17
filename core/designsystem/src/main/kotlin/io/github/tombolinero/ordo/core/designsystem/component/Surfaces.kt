@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.foundation.border
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,16 +34,33 @@ import kotlin.math.max
 
 /** Surface finishes of the reference design. Stored per list as its card colour. */
 @Immutable
-enum class PillowStyle { Graphite, Magenta, Violet, Gold }
+enum class PillowStyle { Graphite, Magenta, Violet, Gold, Ruby, Petrol, Cobalt, Pearl }
 
 /** Content colour that reads well on each [PillowStyle]. */
-fun PillowStyle.contentColor(): Color = if (this == PillowStyle.Gold) OrdoPalette.YellowInk else Color.White
+fun PillowStyle.contentColor(): Color = when (this) {
+    PillowStyle.Gold -> OrdoPalette.YellowInk
+    PillowStyle.Pearl -> Color(0xFF16141B)
+    else -> Color.White
+}
 
-fun PillowStyle.secondaryContentColor(): Color =
-    if (this == PillowStyle.Gold) OrdoPalette.YellowInk.copy(alpha = 0.7f) else Color.White.copy(alpha = 0.66f)
+fun PillowStyle.secondaryContentColor(): Color = contentColor().copy(alpha = if (isLight) 0.62f else 0.66f)
+
+val PillowStyle.isLight: Boolean get() = this == PillowStyle.Gold || this == PillowStyle.Pearl
+
+/** Colour of the soft outer glow when glow is tinted. */
+fun PillowStyle.glowColor(): Color = when (this) {
+    PillowStyle.Graphite -> Color.White
+    PillowStyle.Magenta -> OrdoPalette.PurpleLight
+    PillowStyle.Violet -> OrdoPalette.Violet
+    PillowStyle.Gold -> OrdoPalette.Yellow
+    PillowStyle.Ruby -> Color(0xFFE2475A)
+    PillowStyle.Petrol -> Color(0xFF19B3A3)
+    PillowStyle.Cobalt -> Color(0xFF4A7CF0)
+    PillowStyle.Pearl -> Color.White
+}
 
 /** Accent that stays visible on the surface (yellow everywhere except on the yellow card). */
-fun PillowStyle.accentColor(): Color = if (this == PillowStyle.Gold) OrdoPalette.YellowInk else OrdoPalette.Yellow
+fun PillowStyle.accentColor(): Color = if (isLight) OrdoPalette.YellowInk else OrdoPalette.Yellow
 
 private fun Modifier.pillowFill(style: PillowStyle): Modifier = drawWithCache {
     val w = size.width
@@ -71,6 +90,38 @@ private fun Modifier.pillowFill(style: PillowStyle): Modifier = drawWithCache {
             center = Offset(w * 0.5f, h * 0.45f),
             radius = max(w, h) * 0.78f,
         )
+        PillowStyle.Ruby -> Brush.radialGradient(
+            0f to Color(0xFFFFA3B0),
+            0.18f to Color(0xFFE2475A),
+            0.58f to Color(0xFFB3203F),
+            1f to Color(0xFF5E0C24),
+            center = Offset(w * 0.14f, h * 0.08f),
+            radius = diag * 1.05f,
+        )
+        PillowStyle.Cobalt -> Brush.radialGradient(
+            0f to Color(0xFF9DBBFF),
+            0.18f to Color(0xFF4A7CF0),
+            0.56f to Color(0xFF2346C2),
+            1f to Color(0xFF0E1F63),
+            center = Offset(w * 0.14f, h * 0.08f),
+            radius = diag * 1.05f,
+        )
+        PillowStyle.Petrol -> Brush.radialGradient(
+            0.35f to Color(0xFF01161A),
+            0.70f to Color(0xFF07393D),
+            0.92f to Color(0xFF0E7C74),
+            1f to Color(0xFF19B3A3),
+            center = Offset(w * 0.5f, h * 0.45f),
+            radius = max(w, h) * 0.78f,
+        )
+        PillowStyle.Pearl -> Brush.radialGradient(
+            0f to Color(0xFFFFFFFF),
+            0.3f to Color(0xFFEDEBF0),
+            0.75f to Color(0xFFBFBAC7),
+            1f to Color(0xFF8E8998),
+            center = Offset(w * 0.2f, h * 0.1f),
+            radius = diag,
+        )
         PillowStyle.Gold -> Brush.radialGradient(
             0f to OrdoPalette.YellowLight,
             0.45f to OrdoPalette.Yellow,
@@ -99,6 +150,31 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawDotTexture(colo
     drawPoints(points, PointMode.Points, color, strokeWidth = radius * 2, cap = StrokeCap.Round)
 }
 
+/** Soft light that bleeds from a surface into the black background. */
+@Immutable
+data class SurfaceGlow(
+    val radius: Dp = 0.dp,
+    val alpha: Float = 0f,
+    val tinted: Boolean = false,
+    val rim: Boolean = false,
+) {
+    companion object {
+        val None = SurfaceGlow()
+    }
+}
+
+val LocalSurfaceGlow = staticCompositionLocalOf { SurfaceGlow.None }
+
+internal fun Modifier.surfaceGlow(glow: SurfaceGlow, shape: Shape, tint: Color): Modifier =
+    if (glow.alpha <= 0f) this else dropShadow(shape, Shadow(radius = glow.radius, color = (if (glow.tinted) tint else Color.White).copy(alpha = glow.alpha)))
+
+internal fun Modifier.surfaceRim(glow: SurfaceGlow, shape: Shape): Modifier =
+    if (!glow.rim) this else border(
+        1.dp,
+        Brush.linearGradient(listOf(Color.White.copy(alpha = 0.22f), Color.White.copy(alpha = 0.03f), Color.White.copy(alpha = 0.08f))),
+        shape,
+    )
+
 /**
  * The soft, inflated card of the reference design: gradient fill lit from the top left,
  * a faint light rim on the upper edges and a deep, blurred shadow.
@@ -111,13 +187,16 @@ fun PillowSurface(
     elevation: Dp = 14.dp,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    val glow = LocalSurfaceGlow.current
     Box(
         modifier
+            .surfaceGlow(glow, shape, style.glowColor())
             .dropShadow(shape, Shadow(radius = elevation * 2, color = Color.Black.copy(alpha = 0.7f), offset = DpOffset(0.dp, elevation * 0.7f)))
             .clip(shape)
             .pillowFill(style)
             .innerShadow(shape, Shadow(radius = 2.dp, color = Color.White.copy(alpha = if (style == PillowStyle.Graphite) 0.07f else 0.16f), offset = DpOffset(1.dp, 1.dp)))
-            .innerShadow(shape, Shadow(radius = 18.dp, color = Color.Black.copy(alpha = if (style == PillowStyle.Gold) 0.10f else 0.22f), offset = DpOffset((-4).dp, (-6).dp))),
+            .innerShadow(shape, Shadow(radius = 18.dp, color = Color.Black.copy(alpha = if (style.isLight) 0.10f else 0.22f), offset = DpOffset((-4).dp, (-6).dp)))
+            .surfaceRim(glow, shape),
         content = content,
     )
 }
