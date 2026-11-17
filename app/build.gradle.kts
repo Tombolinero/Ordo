@@ -52,6 +52,15 @@ android {
             resValue("string", "app_name", "Ordo")
             signingConfig = signingConfigs.findByName("release")
         }
+        // Same shrunk/optimised code as release, but debug-signed and installable next to it.
+        // Only for automated checks of the R8 output on the emulator; never published.
+        create("minifiedCheck") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".check"
+            resValue("string", "app_name", "Ordo Check")
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+        }
     }
 
     buildFeatures {

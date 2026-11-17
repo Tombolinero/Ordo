@@ -42,6 +42,8 @@ jobs:
           ./gradlew :app:assembleDebug :app:assembleDebugAndroidTest -Pordo.version=0.0.2
           cp app/build/outputs/apk/debug/app-debug.apk new.apk
           cp app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk test.apk
+          ./gradlew :app:assembleMinifiedCheck -Pordo.version=0.0.2
+          cp app/build/outputs/apk/minifiedCheck/app-minifiedCheck.apk minified.apk
 
       - name: Run checks on the emulator
         uses: reactivecircus/android-emulator-runner@v2
