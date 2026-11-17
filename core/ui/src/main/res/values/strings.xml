@@ -30,4 +30,6 @@
     <string name="color_ruby">Ruby</string>
     <string name="color_cobalt">Cobalt</string>
     <string name="color_petrol">Petrol</string>
+    <string name="crop_title">Crop picture</string>
+    <string name="crop_apply">Use</string>
 </resources>

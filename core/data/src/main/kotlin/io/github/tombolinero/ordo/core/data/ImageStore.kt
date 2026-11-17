@@ -56,6 +56,25 @@ class ImageStore(private val dir: File) {
         save(process(decoded, orientation, crop))
     }
 
+    /**
+     * Upright, downscaled bitmap of a picked image for the crop screen (longer side ≤ [maxSide]).
+     */
+    suspend fun loadPreview(context: Context, uri: Uri, maxSide: Int = 1600): Bitmap = withContext(Dispatchers.IO) {
+        val resolver = context.contentResolver
+        val orientation = resolver.openInputStream(uri)?.use { readOrientation(it) } ?: ExifInterface.ORIENTATION_NORMAL
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
+        require(bounds.outWidth > 0 && bounds.outHeight > 0) { "Not an image" }
+        var sample = 1
+        while (max(bounds.outWidth, bounds.outHeight) / (sample * 2) >= maxSide) sample *= 2
+        val decoded = resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inSampleSize = sample }) }
+            ?: error("Not an image")
+        process(decoded, orientation, CropRect.Full).let { b ->
+            val scale = maxSide.toFloat() / max(b.width, b.height)
+            if (scale >= 1f) b else Bitmap.createScaledBitmap(b, (b.width * scale).roundToInt(), (b.height * scale).roundToInt(), true)
+        }
+    }
+
     /** Stores an already decoded bitmap (e.g. from tests or the share sheet). */
     suspend fun save(bitmap: Bitmap): ImageId = withContext(Dispatchers.IO) {
         val id = ImageId.new()

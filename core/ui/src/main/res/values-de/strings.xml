@@ -30,4 +30,6 @@
     <string name="color_ruby">Rubin</string>
     <string name="color_cobalt">Kobalt</string>
     <string name="color_petrol">Petrol</string>
+    <string name="crop_title">Bild zuschneiden</string>
+    <string name="crop_apply">Übernehmen</string>
 </resources>

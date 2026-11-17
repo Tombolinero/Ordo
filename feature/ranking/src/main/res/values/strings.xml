@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sort">Sort</string>
+    <string name="sort_mode">Sorting</string>
+    <string name="sort_hint">Drag by the handle. Hold an entry over another one to share the place.</string>
+    <string name="inbox_title">Not placed yet</string>
+    <string name="inbox_place">Place</string>
+    <string name="moved">Moved to place %d</string>
+    <string name="tied">Now sharing place %d</string>
+    <string name="detached">Tie resolved</string>
+    <string name="item_trashed">“%s” moved to the trash</string>
+    <string name="item_to_inbox">“%s” is back in “Not placed yet”</string>
+    <string name="empty_title">Still empty</string>
+    <string name="empty_hint">Add the first entry with the yellow button.</string>
+    <string name="add_title">New entry</string>
+    <string name="field_title">Title</string>
+    <string name="field_title_hint">e.g. Porsche Taycan</string>
+    <string name="field_note">Note</string>
+    <string name="field_note_hint">Why this place? Anything that comes to mind.</string>
+    <string name="pick_image">Add picture</string>
+    <string name="change_image">Change picture</string>
+    <string name="remove_image">Remove picture</string>
+    <string name="save_inbox">Place later</string>
+    <string name="save_duel">Place now</string>
+    <string name="menu_edit_list">Edit list</string>
+    <string name="menu_share">Share as image</string>
+    <string name="item_open">Open</string>
+    <string name="item_replace">Place again</string>
+    <string name="item_to_inbox_action">Back to “Not placed yet”</string>
+    <string name="resolve_tie">Resolve tie</string>
+    <string name="shared_place">shared place</string>
+</resources>
