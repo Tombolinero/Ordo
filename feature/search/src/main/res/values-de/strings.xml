@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Alle Listen durchsuchen</string>
+    <string name="search_empty_title">Titel und Notizen durchsuchen</string>
+    <string name="search_empty_hint">Findet Einträge in allen Listen, egal auf welchem Platz.</string>
+    <string name="search_none_title">Nichts gefunden</string>
+    <string name="search_none_hint">Kein Eintrag enthält „%s“.</string>
+</resources>

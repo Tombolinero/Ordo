@@ -12,12 +12,4 @@
     <string name="list_copy_suffix">(copy)</string>
     <string name="list_trashed">“%s” moved to the trash</string>
     <string name="list_duplicated">“%s” duplicated</string>
-    <string name="editor_new">New list</string>
-    <string name="editor_edit">Edit list</string>
-    <string name="editor_title">Title</string>
-    <string name="editor_title_hint">e.g. Best cars</string>
-    <string name="editor_description">Description</string>
-    <string name="editor_description_hint">Optional</string>
-    <string name="editor_color">Card colour</string>
-    <string name="editor_create">Create list</string>
 </resources>

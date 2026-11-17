@@ -13,6 +13,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -31,8 +32,14 @@ import io.github.tombolinero.ordo.feature.lists.HomeRoute
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun OrdoNavHost() {
+fun OrdoNavHost(openList: String? = null, onListOpened: () -> Unit = {}) {
     val nav = rememberNavController()
+    LaunchedEffect(openList) {
+        if (openList != null) {
+            nav.navigate(ListDestination(openList)) { popUpTo(HomeDestination) }
+            onListOpened()
+        }
+    }
     SharedTransitionLayout {
         CompositionLocalProvider(LocalSharedTransitionScope provides this) {
             NavHost(

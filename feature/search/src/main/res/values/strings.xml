@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Search all lists</string>
+    <string name="search_empty_title">Search titles and notes</string>
+    <string name="search_empty_hint">Finds entries in every list, wherever they are placed.</string>
+    <string name="search_none_title">Nothing found</string>
+    <string name="search_none_hint">No entry contains “%s”.</string>
+</resources>

@@ -211,7 +211,7 @@ fun GlassPillButton(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
     ) {
         if (icon != null) Icon(icon, null, Modifier.size(18.dp), tint = fg)
-        Text(text, style = OrdoTheme.type.button, color = fg)
+        Text(text, style = OrdoTheme.type.button, color = fg, maxLines = 1, softWrap = false)
     }
 }
 

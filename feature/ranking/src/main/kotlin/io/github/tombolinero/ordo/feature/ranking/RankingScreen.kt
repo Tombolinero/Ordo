@@ -57,6 +57,7 @@ import io.github.tombolinero.ordo.core.model.RankItem
 import io.github.tombolinero.ordo.core.model.RankedList
 import io.github.tombolinero.ordo.core.ui.ActionList
 import io.github.tombolinero.ordo.core.ui.EmptyState
+import io.github.tombolinero.ordo.core.ui.ListEditorSheet
 import io.github.tombolinero.ordo.core.ui.OrdoSheet
 import io.github.tombolinero.ordo.core.ui.R as UiR
 import io.github.tombolinero.ordo.core.ui.SheetAction
@@ -73,13 +74,11 @@ fun RankingRoute(
     onBack: () -> Unit,
     onOpenItem: (ItemId) -> Unit,
     onPlace: (ItemId) -> Unit,
-    onEditList: () -> Unit,
-    onShare: () -> Unit,
     onOpenSettings: () -> Unit,
 ) {
     val vm = ordoViewModel(key = listId.value) { RankingViewModel(it, listId) }
     val state by vm.state.collectAsStateWithLifecycle()
-    RankingScreen(state, vm, onBack, onOpenItem, onPlace, onEditList, onShare, onOpenSettings)
+    RankingScreen(state, vm, onBack, onOpenItem, onPlace, onOpenSettings)
 }
 
 @Composable
@@ -89,11 +88,11 @@ internal fun RankingScreen(
     onBack: () -> Unit,
     onOpenItem: (ItemId) -> Unit,
     onPlace: (ItemId) -> Unit,
-    onEditList: () -> Unit,
-    onShare: () -> Unit,
     onOpenSettings: () -> Unit,
 ) {
     val context = LocalContext.current
+    var sharing by remember { mutableStateOf(false) }
+    var editingList by remember { mutableStateOf(false) }
     val undo = rememberUndoState()
     var adding by rememberSaveable { mutableStateOf(false) }
     var menuOpen by remember { mutableStateOf(false) }
@@ -182,11 +181,18 @@ internal fun RankingScreen(
                 list?.list?.title,
                 listOf(
                     SheetAction(OrdoIcons.Sort, stringResource(R.string.sort)) { menuOpen = false; vm?.setSorting(true) },
-                    SheetAction(OrdoIcons.Edit, stringResource(R.string.menu_edit_list)) { menuOpen = false; onEditList() },
-                    SheetAction(OrdoIcons.Share, stringResource(R.string.menu_share)) { menuOpen = false; onShare() },
+                    SheetAction(OrdoIcons.Edit, stringResource(R.string.menu_edit_list)) { menuOpen = false; editingList = true },
+                    SheetAction(OrdoIcons.Share, stringResource(R.string.menu_share)) { menuOpen = false; sharing = true },
                     SheetAction(OrdoIcons.Settings, stringResource(UiR.string.nav_settings)) { menuOpen = false; onOpenSettings() },
                 ),
             )
+        }
+    }
+    if (sharing && list != null) ShareRankingSheet(list) { sharing = false }
+    if (editingList && list != null) {
+        ListEditorSheet(list.list, onDismiss = { editingList = false }) { title, description, color ->
+            editingList = false
+            vm?.updateList(title, description, color)
         }
     }
     itemMenu?.let { item ->

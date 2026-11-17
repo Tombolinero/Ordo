@@ -29,4 +29,8 @@
     <string name="item_to_inbox_action">Back to “Not placed yet”</string>
     <string name="resolve_tie">Resolve tie</string>
     <string name="shared_place">shared place</string>
+    <string name="share_title">Share ranking</string>
+    <string name="share_button">Share</string>
+    <string name="share_top">Top %d</string>
+    <string name="share_footer">Ranked with Ordo</string>
 </resources>

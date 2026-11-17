@@ -19,13 +19,18 @@ class RankingScreenshotTest {
     @get:Rule val compose = createComposeRule()
 
     private fun shoot(name: String, state: RankingUiState) {
-        compose.setContent { OrdoTheme { RankingScreen(state, null, {}, {}, {}, {}, {}, {}) } }
+        compose.setContent { OrdoTheme { RankingScreen(state, null, {}, {}, {}, {}) } }
         compose.onRoot().captureRoboImage("src/test/screenshots/$name.png")
     }
 
     @Test fun podium() = shoot("ranking", RankingUiState(loading = false, list = Samples.list()))
 
     @Test fun podiumGraphite() = shoot("ranking_graphite", RankingUiState(loading = false, list = Samples.list(ListColor.Graphite)))
+
+    @Test fun shareCard() {
+        compose.setContent { OrdoTheme { ShareCard(Samples.list()) } }
+        compose.onRoot().captureRoboImage("src/test/screenshots/share_card.png")
+    }
 
     @Test fun sortMode() = shoot("ranking_sort", RankingUiState(loading = false, list = Samples.list(), sorting = true))
 }

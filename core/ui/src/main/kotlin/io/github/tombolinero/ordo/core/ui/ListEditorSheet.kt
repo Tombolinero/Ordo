@@ -1,4 +1,4 @@
-package io.github.tombolinero.ordo.feature.lists
+package io.github.tombolinero.ordo.core.ui
 
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.animateDpAsState
@@ -45,11 +45,6 @@ import io.github.tombolinero.ordo.core.designsystem.theme.OrdoPalette
 import io.github.tombolinero.ordo.core.designsystem.theme.OrdoTheme
 import io.github.tombolinero.ordo.core.model.ListColor
 import io.github.tombolinero.ordo.core.model.RankList
-import io.github.tombolinero.ordo.core.ui.OrdoSheet
-import io.github.tombolinero.ordo.core.ui.OrdoTextField
-import io.github.tombolinero.ordo.core.ui.R as UiR
-import io.github.tombolinero.ordo.core.ui.labelRes
-import io.github.tombolinero.ordo.core.ui.pillow
 
 /** Create a list ([existing] == null) or edit title, description and card colour. */
 @Composable
@@ -84,9 +79,9 @@ fun ListEditorSheet(
         }
         Spacer(Modifier.height(28.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End)) {
-            GlassPillButton(stringResource(UiR.string.action_cancel), onDismiss)
+            GlassPillButton(stringResource(R.string.action_cancel), onDismiss)
             GlassPillButton(
-                stringResource(if (existing == null) R.string.editor_create else UiR.string.action_save),
+                stringResource(if (existing == null) R.string.editor_create else R.string.action_save),
                 onClick = { if (canSave) onSave(title, description, color) },
                 icon = OrdoIcons.Check,
                 accent = true,

@@ -29,4 +29,8 @@
     <string name="item_to_inbox_action">Zurück zu „Noch nicht eingeordnet“</string>
     <string name="resolve_tie">Gleichstand auflösen</string>
     <string name="shared_place">geteilter Platz</string>
+    <string name="share_title">Rangliste teilen</string>
+    <string name="share_button">Teilen</string>
+    <string name="share_top">Top %d</string>
+    <string name="share_footer">Gerankt mit Ordo</string>
 </resources>

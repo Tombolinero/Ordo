@@ -12,12 +12,4 @@
     <string name="list_copy_suffix">(Kopie)</string>
     <string name="list_trashed">„%s“ liegt im Papierkorb</string>
     <string name="list_duplicated">„%s“ dupliziert</string>
-    <string name="editor_new">Neue Liste</string>
-    <string name="editor_edit">Liste bearbeiten</string>
-    <string name="editor_title">Titel</string>
-    <string name="editor_title_hint">z. B. Beste Autos</string>
-    <string name="editor_description">Beschreibung</string>
-    <string name="editor_description_hint">Optional</string>
-    <string name="editor_color">Kartenfarbe</string>
-    <string name="editor_create">Liste anlegen</string>
 </resources>
