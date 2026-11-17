@@ -8,6 +8,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
         pluginManager.apply("ordo.android.library")
         pluginManager.apply("ordo.android.compose")
         pluginManager.apply("ordo.screenshot")
+        pluginManager.apply("org.jetbrains.kotlin.plugin.serialization")
         dependencies {
             add("implementation", project(":core:model"))
             add("implementation", project(":core:designsystem"))
@@ -17,6 +18,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             add("implementation", libs.findLibrary("androidx-lifecycle-viewmodel-compose").get())
             add("implementation", libs.findLibrary("androidx-navigation-compose").get())
             add("implementation", libs.findLibrary("kotlinx-coroutines-android").get())
+            add("implementation", libs.findLibrary("kotlinx-serialization-json").get())
+            add("implementation", libs.findLibrary("coil-compose").get())
             add("testImplementation", libs.findLibrary("turbine").get())
         }
     }

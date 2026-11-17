@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.ordo.android.application)
     alias(libs.plugins.ordo.android.compose)
     alias(libs.plugins.ordo.screenshot)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 /**
@@ -55,6 +56,13 @@ android {
 
     buildFeatures {
         resValues = true
+        buildConfig = true
+    }
+
+    androidResources {
+        // Only ship the languages the app is translated to (keeps libraries' extra locales out).
+        localeFilters += listOf("en", "de")
+        generateLocaleConfig = true
     }
 
     packaging {
@@ -71,6 +79,12 @@ android {
 dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:data"))
+    implementation(project(":core:ui"))
+    implementation(project(":feature:lists"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.core.splashscreen)
 }

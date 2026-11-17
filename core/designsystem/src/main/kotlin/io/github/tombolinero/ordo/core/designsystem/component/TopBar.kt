@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -59,4 +61,23 @@ fun OrdoTopBar(
 @Composable
 fun OrdoBackground(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
     Box(modifier.fillMaxSize().dotGridBackground(), content = content)
+}
+
+/** Soft fade to black behind the floating bottom bar, so content dissolves instead of being cut. */
+@Composable
+fun BoxScope.BottomScrim(height: androidx.compose.ui.unit.Dp = 150.dp) {
+    Box(
+        Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()
+            .height(height)
+            .drawWithCache {
+                val brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                    0f to androidx.compose.ui.graphics.Color.Transparent,
+                    0.55f to androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.85f),
+                    1f to androidx.compose.ui.graphics.Color.Black,
+                )
+                onDrawBehind { drawRect(brush) }
+            },
+    )
 }

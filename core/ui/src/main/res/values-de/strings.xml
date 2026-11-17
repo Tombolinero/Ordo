@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_back">Zurück</string>
+    <string name="action_more">Mehr</string>
+    <string name="action_undo">Rückgängig</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_done">Fertig</string>
+    <string name="action_delete">In den Papierkorb</string>
+    <string name="nav_lists">Listen</string>
+    <string name="nav_new">Neu</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="nav_search">Suche</string>
+    <plurals name="entries_count">
+        <item quantity="one">%d Eintrag</item>
+        <item quantity="other">%d Einträge</item>
+    </plurals>
+    <plurals name="ties_count">
+        <item quantity="one">%d Gleichstand</item>
+        <item quantity="other">%d Gleichstände</item>
+    </plurals>
+    <plurals name="unranked_count">
+        <item quantity="one">%d nicht eingeordnet</item>
+        <item quantity="other">%d nicht eingeordnet</item>
+    </plurals>
+    <string name="place_of">Platz %1$d von %2$d</string>
+    <string name="color_graphite">Graphit</string>
+    <string name="color_magenta">Magenta</string>
+    <string name="color_violet">Violett</string>
+    <string name="color_ruby">Rubin</string>
+    <string name="color_cobalt">Kobalt</string>
+    <string name="color_petrol">Petrol</string>
+</resources>

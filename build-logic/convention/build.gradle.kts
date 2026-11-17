@@ -15,6 +15,7 @@ dependencies {
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.room.gradlePlugin)
     compileOnly(libs.roborazzi.gradlePlugin)
+    compileOnly(libs.serialization.gradlePlugin)
 }
 
 gradlePlugin {
