@@ -19,4 +19,7 @@ class DataGraph(
     val repository: OrdoRepository = OrdoRepository(database, images, clock)
     val backups: BackupService = BackupService(database, images, File(app.cacheDir, "backup"), appVersionName, appVersionCode, clock)
     val safetyBackupDir: File = File(app.filesDir, "safety-backups")
+
+    /** Closes the database (tests). */
+    fun close() = database.close()
 }
