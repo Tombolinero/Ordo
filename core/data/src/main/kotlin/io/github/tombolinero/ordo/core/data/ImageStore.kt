@@ -101,10 +101,18 @@ class ImageStore(private val dir: File) {
         file(id).delete()
     }
 
-    /** Deletes every image that is not in [keep] (unreferenced leftovers, leftover temp files). */
-    fun deleteAllExcept(keep: Set<ImageId>) {
+    /**
+     * Deletes every image that is not in [keep] (unreferenced leftovers, abandoned temp files).
+     *
+     * Files younger than [graceMillis] are always kept: an image is saved a moment *before* the
+     * entry that references it is written, and a cleanup running in between (e.g. at app start)
+     * must never delete it.
+     */
+    fun deleteAllExcept(keep: Set<ImageId>, graceMillis: Long = CLEANUP_GRACE_MILLIS, now: Long = System.currentTimeMillis()) {
         val keepNames = keep.map(::fileName).toSet()
-        dir.listFiles().orEmpty().filter { it.isFile && it.name !in keepNames }.forEach { it.delete() }
+        dir.listFiles().orEmpty()
+            .filter { it.isFile && it.name !in keepNames && now - it.lastModified() >= graceMillis }
+            .forEach { it.delete() }
     }
 
     private fun readOrientation(input: InputStream): Int =
@@ -113,6 +121,7 @@ class ImageStore(private val dir: File) {
 
     companion object {
         const val MAX_SIDE = 2048
+        const val CLEANUP_GRACE_MILLIS = 10L * 60 * 1000
         private const val QUALITY = 88
         private val SAFE_NAME = Regex("^[A-Za-z0-9._-]{1,128}$")
 

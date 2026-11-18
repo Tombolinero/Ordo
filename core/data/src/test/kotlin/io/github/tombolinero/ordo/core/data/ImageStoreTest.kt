@@ -38,9 +38,20 @@ class ImageStoreTest {
         val keep = store.save(bitmap(10, 10))
         val drop = store.save(bitmap(10, 10))
         assertThat(store.exists(keep)).isTrue()
+        // Fresh files survive a cleanup (they may be about to be referenced) ...
         store.deleteAllExcept(setOf(keep))
+        assertThat(store.exists(drop)).isTrue()
+        // ... once they are older than the grace period, unreferenced ones go.
+        store.deleteAllExcept(setOf(keep), now = System.currentTimeMillis() + ImageStore.CLEANUP_GRACE_MILLIS + 1)
         assertThat(store.exists(keep)).isTrue()
         assertThat(store.exists(drop)).isFalse()
+    }
+
+    @Test fun `an image saved while a cleanup runs is not lost`() = runTest {
+        val store = ImageStore(tmp.newFolder())
+        val fresh = store.save(bitmap(10, 10))
+        store.deleteAllExcept(emptySet())
+        assertThat(store.exists(fresh)).isTrue()
     }
 
     @Test fun `adopt rejects unsafe names`() {
