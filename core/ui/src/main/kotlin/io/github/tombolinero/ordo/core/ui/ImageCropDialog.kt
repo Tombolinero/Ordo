@@ -98,13 +98,9 @@ private fun CropContent(bitmap: Bitmap, onDismiss: () -> Unit, onCropped: (CropR
             val offsetX = remember { Animatable(0f) }
             val offsetY = remember { Animatable(0f) }
 
-            fun clampTargets(s: Float): Pair<Float, Float> {
-                val iw = bitmap.width * s
-                val ih = bitmap.height * s
-                val maxX = (iw - frameSide) / 2
-                val maxY = (ih - frameSide) / 2
-                return offsetX.value.coerceIn(-maxX, maxX) to offsetY.value.coerceIn(-maxY, maxY)
-            }
+            fun clampTargets(s: Float): Pair<Float, Float> =
+                CropMath.clampOffset(offsetX.value, bitmap.width * s, frameSide) to
+                    CropMath.clampOffset(offsetY.value, bitmap.height * s, frameSide)
 
             Canvas(
                 Modifier
@@ -112,6 +108,8 @@ private fun CropContent(bitmap: Bitmap, onDismiss: () -> Unit, onCropped: (CropR
                     .pointerInput(bitmap) {
                         detectTransformGestures(
                             onGesture = { _, pan, zoom, _ ->
+                                // Two fingers on the same spot can report a zoom of 0/0: ignore such events.
+                                if (!zoom.isFinite() || zoom <= 0f || !pan.x.isFinite() || !pan.y.isFinite()) return@detectTransformGestures
                                 scope.launch {
                                     scale.snapTo((scale.value * zoom).coerceIn(minScale * 0.85f, minScale * 6f))
                                     offsetX.snapTo(offsetX.value + pan.x)
@@ -128,12 +126,7 @@ private fun CropContent(bitmap: Bitmap, onDismiss: () -> Unit, onCropped: (CropR
                                 if (event.changes.none { it.pressed }) {
                                     val s = scale.value.coerceAtLeast(minScale)
                                     scope.launch { scale.animateTo(s, OrdoMotion.bouncy()) }
-                                    val (tx, ty) = run {
-                                        val iw = bitmap.width * s
-                                        val ih = bitmap.height * s
-                                        offsetX.value.coerceIn(-(iw - frameSide) / 2, (iw - frameSide) / 2) to
-                                            offsetY.value.coerceIn(-(ih - frameSide) / 2, (ih - frameSide) / 2)
-                                    }
+                                    val (tx, ty) = clampTargets(s)
                                     scope.launch { offsetX.animateTo(tx, OrdoMotion.bouncy()) }
                                     scope.launch { offsetY.animateTo(ty, OrdoMotion.bouncy()) }
                                 }
@@ -170,18 +163,37 @@ private fun CropContent(bitmap: Bitmap, onDismiss: () -> Unit, onCropped: (CropR
                     val (ox, oy) = clampTargets(s)
                     val iw = bitmap.width * s
                     val ih = bitmap.height * s
-                    val left = (iw - frameSide) / 2 - ox
-                    val top = (ih - frameSide) / 2 - oy
-                    onCropped(
-                        CropRect(
-                            (left / iw).coerceIn(0f, 1f),
-                            (top / ih).coerceIn(0f, 1f),
-                            ((left + frameSide) / iw).coerceIn(0f, 1f),
-                            ((top + frameSide) / ih).coerceIn(0f, 1f),
-                        ),
-                    )
+                    onCropped(CropMath.cropRect(ox, oy, iw, ih, frameSide))
                 })
             }
         }
+    }
+}
+
+/**
+ * Pure maths of the crop screen, kept separate so it can be tested with awkward numbers.
+ * Float rounding can make "image size − frame size" a tiny negative number when the image
+ * exactly fills the frame; every range below is guarded against that.
+ */
+internal object CropMath {
+    /** Keeps the picture covering the frame: offset limited to ±(image − frame) / 2. */
+    fun clampOffset(offset: Float, imageSide: Float, frameSide: Float): Float {
+        val limit = ((imageSide - frameSide) / 2f).coerceAtLeast(0f)
+        if (!limit.isFinite() || limit == 0f || !offset.isFinite()) return 0f
+        return offset.coerceIn(-limit, limit)
+    }
+
+    /** The part of the picture inside the frame, as fractions of the picture. */
+    fun cropRect(offsetX: Float, offsetY: Float, imageW: Float, imageH: Float, frameSide: Float): CropRect {
+        if (!imageW.isFinite() || !imageH.isFinite() || !frameSide.isFinite() || frameSide <= 0f) return CropRect.Full
+        val w = imageW.coerceAtLeast(frameSide).coerceAtLeast(1f)
+        val h = imageH.coerceAtLeast(frameSide).coerceAtLeast(1f)
+        val left = ((w - frameSide) / 2f - (if (offsetX.isFinite()) offsetX else 0f)) / w
+        val top = ((h - frameSide) / 2f - (if (offsetY.isFinite()) offsetY else 0f)) / h
+        val l = left.coerceIn(0f, 0.99f)
+        val t = top.coerceIn(0f, 0.99f)
+        val r = (left + frameSide / w).coerceIn(l + 0.01f, 1f)
+        val b = (top + frameSide / h).coerceIn(t + 0.01f, 1f)
+        return CropRect(l, t, r, b)
     }
 }
