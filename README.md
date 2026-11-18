@@ -78,8 +78,9 @@ Install and update it with Obtainium from this repository's releases.
 | Backups (Rundlauf, Beschädigung, alte und neue Formate) | `core/backup`, `core/data` |
 | Aussehen jedes Screens | Screenshot-Tests (Roborazzi) in jedem Modul unter `src/test/screenshots` |
 | Ziehen, Verschieben, Gleichstand per Geste | `feature/ranking` (simulierte Touch-Eingaben) |
-| Kompletter Ablauf auf echtem Android, mit Video | `.github/workflows/emulator.yml` |
-| Release-Build (R8) startet und übersteht Zufallseingaben | Emulator-Workflow |
+| Kompletter Ablauf auf echtem Android (API 30), mit Video | `.github/workflows/emulator.yml` |
+| Update über alte Version auf Android 11 und 14 | Emulator-Workflow |
+| Release-Build (R8) startet und übersteht Zufallseingaben | Emulator-Workflow (API 30) |
 
 ```bash
 ./gradlew testDebugUnitTest          # alle JVM-/Robolectric-Tests

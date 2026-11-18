@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.innerShadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -191,8 +192,9 @@ fun GlassPillButton(
     val interaction = remember { MutableInteractionSource() }
     val haptics = LocalHapticFeedback.current
     val fg = when {
-        !enabled -> Color.White.copy(alpha = 0.3f)
+        accent && !enabled -> OrdoPalette.YellowInk.copy(alpha = 0.45f)
         accent -> OrdoPalette.YellowInk
+        !enabled -> Color.White.copy(alpha = 0.3f)
         else -> Color.White
     }
     Row(
@@ -202,6 +204,7 @@ fun GlassPillButton(
             .dropShadow(OrdoShapes.Pill, Shadow(radius = 14.dp, color = Color.Black.copy(alpha = 0.6f), offset = DpOffset(0.dp, 6.dp)))
             .clip(OrdoShapes.Pill)
             .then(if (accent) Modifier.dotPillCenter() else Modifier.glassFill(false))
+            .graphicsLayer { alpha = if (accent && !enabled) 0.55f else 1f }
             .clickable(interaction, indication = null, enabled = enabled, role = Role.Button) {
                 haptics.performHapticFeedback(HapticFeedbackType.ContextClick)
                 onClick()

@@ -33,6 +33,11 @@ adb shell dumpsys package $APP | grep -E "versionCode|versionName" | tee out/ver
 instrument update-verify -e class io.github.tombolinero.ordo.UpdateTest#verify -e ordoUpdateStep verify
 echo "::endgroup::"
 
+if [ "${ORDO_CHECKS:-full}" = "data" ]; then
+  echo "Data checks only on this system image (see workflow comment)."
+  exit 0
+fi
+
 echo "::group::End-to-end flow (recorded)"
 free -m
 adb shell pm clear $APP
