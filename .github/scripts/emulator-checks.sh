@@ -23,20 +23,6 @@ adb shell dumpsys package $APP | grep -E "versionCode|versionName" | tee out/ver
 instrument update-verify -e class io.github.tombolinero.ordo.UpdateTest#verify -e ordoUpdateStep verify
 echo "::endgroup::"
 
-echo "::group::Shrunk release build starts and survives random input"
-CHECK=io.github.tombolinero.ordo.check
-adb install -r minified.apk
-adb logcat -c
-adb shell am start -W -n $CHECK/io.github.tombolinero.ordo.MainActivity | tee out/minified-start.txt
-sleep 3
-adb shell monkey -p $CHECK --throttle 150 --pct-syskeys 0 --pct-appswitch 0 -s 42 400 | tee out/monkey.txt
-adb logcat -d > out/logcat-minified.txt
-if grep -E "FATAL EXCEPTION|ANR in $CHECK" out/logcat-minified.txt; then
-  echo "::error::The shrunk release build crashed (see out/logcat-minified.txt)"; exit 1
-fi
-adb uninstall $CHECK || true
-echo "::endgroup::"
-
 echo "::group::End-to-end flow (recorded)"
 adb shell pm clear $APP
 adb shell "screenrecord --bit-rate 8000000 /sdcard/ordo-demo.mp4" &
@@ -54,4 +40,22 @@ sleep 2
 adb pull /sdcard/ordo-demo.mp4 out/ordo-demo.mp4 || true
 adb exec-out screencap -p > out/last-screen.png || true
 echo "::endgroup::"
-exit $RESULT
+if [ "$RESULT" -ne 0 ]; then exit "$RESULT"; fi
+
+echo "::group::Shrunk release build starts and survives random input"
+CHECK=io.github.tombolinero.ordo.check
+adb install -r minified.apk
+adb logcat -c
+adb shell am start -W -n $CHECK/io.github.tombolinero.ordo.MainActivity | tee out/minified-start.txt
+sleep 3
+# Taps and swipes only: other event types (trackball, system keys, rotation) mostly fail to
+# inject on emulators and say nothing about the app.
+# (Touch + motion = 100 %, so every other event type gets 0 %.)
+adb shell monkey -p $CHECK --throttle 200 -s 42 --pct-touch 65 --pct-motion 35 400 | tee out/monkey.txt || true
+adb logcat -d > out/logcat-minified.txt
+if grep -E "FATAL EXCEPTION|ANR in $CHECK" out/logcat-minified.txt; then
+  echo "::error::The shrunk release build crashed (see out/logcat-minified.txt)"; exit 1
+fi
+adb uninstall $CHECK || true
+echo "::endgroup::"
+
