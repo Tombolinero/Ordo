@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Einstellungen</string>
+    <string name="section_backup">Backup</string>
+    <string name="backup_create">Backup erstellen</string>
+    <string name="backup_create_hint">Eine Datei mit allen Listen, Einträgen, Notizen und Bildern. Bewahre sie gut auf, z. B. in deiner Cloud.</string>
+    <string name="backup_restore">Backup einspielen</string>
+    <string name="backup_restore_hint">Eine .ordobackup-Datei laden, z. B. auf einem neuen Handy.</string>
+    <string name="backup_saving">Backup wird erstellt …</string>
+    <string name="backup_saved">Backup gespeichert</string>
+    <string name="backup_failed">Das Backup konnte nicht gespeichert werden. Bitte wähle einen anderen Speicherort.</string>
+    <string name="restore_reading">Backup wird geprüft …</string>
+    <string name="restore_title">Backup einspielen?</string>
+    <string name="restore_summary">%1$d Listen · %2$d Einträge · %3$d Bilder</string>
+    <string name="restore_created">Erstellt am %s</string>
+    <string name="restore_newer">Dieses Backup stammt aus einer neueren Ordo-Version. Listen, Einträge, Bilder und Notizen kommen vollständig an; was neuere Versionen hinzugefügt haben, kann fehlen. Aktualisiere Ordo, um sicherzugehen.</string>
+    <string name="restore_replace">Alles ersetzen</string>
+    <string name="restore_replace_hint">Deine aktuellen Listen werden durch das Backup ersetzt.</string>
+    <string name="restore_merge">Zusammenführen</string>
+    <string name="restore_merge_hint">Ergänzt, was fehlt; beim selben Eintrag gewinnt die neuere Version. Deine Reihenfolge bleibt erhalten.</string>
+    <string name="restore_safety">Vorher sichert Ordo deinen aktuellen Stand, damit du zurück kannst.</string>
+    <string name="restore_done">Backup eingespielt</string>
+    <string name="restore_error_not_backup">Diese Datei ist kein Ordo-Backup.</string>
+    <string name="restore_error_damaged">Dieses Backup ist beschädigt und wurde nicht eingespielt. Deine Listen sind unverändert.</string>
+    <string name="restore_error_newer">Für dieses Backup brauchst du eine neuere Ordo-Version. Bitte aktualisiere zuerst die App.</string>
+    <string name="restore_error_large">Dieses Backup ist zu groß zum Einspielen.</string>
+    <string name="restore_error_generic">Das Backup konnte nicht gelesen werden.</string>
+    <string name="section_trash">Papierkorb</string>
+    <string name="trash_hint">Gelöschte Listen und Einträge bleiben hier 30 Tage.</string>
+    <string name="section_language">Sprache</string>
+    <string name="language_hint">Ordo folgt der Sprache deines Handys. Du kannst für Ordo auch eine andere wählen.</string>
+    <string name="language_open">Sprache ändern</string>
+    <string name="section_about">Über Ordo</string>
+    <string name="about_version">Version %s</string>
+    <string name="about_license">Freie Software unter der GNU GPL v3</string>
+    <string name="about_source">Quellcode auf GitHub</string>
+    <string name="trash_title">Papierkorb</string>
+    <string name="trash_empty_title">Der Papierkorb ist leer</string>
+    <string name="trash_empty_hint">Gelöschte Listen und Einträge erscheinen hier 30 Tage lang.</string>
+    <string name="trash_restore">Wiederherstellen</string>
+    <string name="trash_delete_forever">Endgültig löschen</string>
+    <string name="trash_empty_action">Papierkorb leeren</string>
+    <string name="trash_empty_confirm">Alles im Papierkorb endgültig löschen? Das lässt sich nicht rückgängig machen.</string>
+    <string name="trash_list">Liste · %s</string>
+    <string name="trash_from">Aus „%s“</string>
+    <string name="trash_days_left">noch %d Tage</string>
+</resources>

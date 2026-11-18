@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_description">Die Top 3 einer deiner Listen</string>
+    <string name="widget_pick">Welche Liste?</string>
+    <string name="widget_empty">Wähle eine Liste für dieses Widget</string>
+    <string name="widget_no_lists">Noch keine Listen</string>
+    <string name="widget_no_lists_hint">Leg zuerst in Ordo eine Liste an und füge das Widget dann erneut hinzu.</string>
+</resources>

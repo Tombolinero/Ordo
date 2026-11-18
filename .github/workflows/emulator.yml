@@ -1,0 +1,110 @@
+name: Emulator
+
+# Real Android system tests: end-to-end flow (recorded as video) and
+# "install an update over an older version, all data still there".
+on:
+  push:
+    branches: [main, "claude/**", "feature/**", "develop"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: emulator-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  emulator:
+    name: Android API ${{ matrix.api }} (${{ matrix.checks }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Full checks: update over an older version, recorded end-to-end flow, shrunk
+          # release build under random input.
+          - api: 30
+            gpu: swiftshader_indirect
+            checks: full
+          # Android 14 system images always render through the host-side GL translator,
+          # which crashes the emulator process when software-rendering Ordo's blurred
+          # shadows on CI runners without a GPU. Real devices are unaffected. So on 14
+          # we run everything that needs no screen: install, update, data checks.
+          - api: 34
+            gpu: swiftshader_indirect
+            checks: data
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Free disk space
+        run: |
+          # The emulator needs several GB; drop toolchains this job never uses.
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost /usr/share/swift /usr/local/lib/node_modules "$AGENT_TOOLSDIRECTORY/CodeQL"
+          df -h /
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      - name: Build older and newer APK
+        run: |
+          ./gradlew :app:assembleDebug -Pordo.version=0.0.1
+          cp app/build/outputs/apk/debug/app-debug.apk old.apk
+          ./gradlew :app:assembleDebug :app:assembleDebugAndroidTest -Pordo.version=0.0.2
+          cp app/build/outputs/apk/debug/app-debug.apk new.apk
+          cp app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk test.apk
+          ./gradlew :app:assembleMinifiedCheck -Pordo.version=0.0.2
+          cp app/build/outputs/apk/minifiedCheck/app-minifiedCheck.apk minified.apk
+
+      - name: Release memory held by the build
+        run: |
+          ./gradlew --stop || true
+          pkill -f KotlinCompileDaemon || true
+          free -m
+
+      # The emulator action downloads these itself, but without retries; a corrupt download
+      # would fail the job for reasons unrelated to the app.
+      - name: Install emulator and system image (with retries)
+        run: |
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          for i in 1 2 3 4; do
+            if yes | "$SDKM" --install emulator "system-images;android-${{ matrix.api }};google_apis;x86_64" > /dev/null; then
+              ls "$ANDROID_HOME/emulator/emulator" && exit 0
+            fi
+            echo "Download failed, retry $i"; sleep $((i * 10))
+          done
+          exit 1
+
+      - name: Run checks on the emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          disk-size: 4096M
+          ram-size: 3072M
+          cores: 4
+          disable-animations: false
+          emulator-options: -no-snapshot -no-window -gpu ${{ matrix.gpu }} -feature -Vulkan -noaudio -no-boot-anim
+          script: ORDO_CHECKS=${{ matrix.checks }} bash .github/scripts/emulator-checks.sh
+
+      - name: Upload video and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-results-android-${{ matrix.api }}
+          path: out/
+          retention-days: 14

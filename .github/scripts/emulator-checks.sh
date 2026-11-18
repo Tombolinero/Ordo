@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Runs inside the Android emulator job (see .github/workflows/emulator.yml).
+#   old.apk  – app built with a lower version
+#   new.apk  – app built from this commit
+#   test.apk – instrumentation tests
+set -euo pipefail
+
+# If the emulator disappears, show why (host memory, kernel OOM killer, emulator crash reports).
+diagnose() {
+  echo "::group::Diagnostics"
+  free -m || true
+  sudo dmesg 2>/dev/null | grep -iE "oom|killed process|out of memory" | tail -20 || true
+  ls -la /tmp/android-*/ 2>/dev/null | tail -20 || true
+  echo "::endgroup::"
+}
+trap diagnose EXIT
+APP=io.github.tombolinero.ordo.debug
+RUNNER=$APP.test/androidx.test.runner.AndroidJUnitRunner
+mkdir -p out
+
+instrument() { # $1 = name, rest = extra args
+  local name=$1; shift
+  adb shell am instrument -w "$@" "$RUNNER" | tee "out/$name.txt"
+  grep -q "^OK (" "out/$name.txt"
+}
+
+echo "::group::Update over an older version keeps all data"
+adb install -r old.apk
+adb install -r test.apk
+instrument update-seed -e class io.github.tombolinero.ordo.UpdateTest#seed -e ordoUpdateStep seed
+adb install -r new.apk
+adb shell dumpsys package $APP | grep -E "versionCode|versionName" | tee out/version.txt
+instrument update-verify -e class io.github.tombolinero.ordo.UpdateTest#verify -e ordoUpdateStep verify
+echo "::endgroup::"
+
+if [ "${ORDO_CHECKS:-full}" = "data" ]; then
+  echo "Data checks only on this system image (see workflow comment)."
+  exit 0
+fi
+
+echo "::group::End-to-end flow (recorded)"
+free -m
+adb shell pm clear $APP
+adb shell "screenrecord --size 720x1600 --bit-rate 4000000 /sdcard/ordo-demo.mp4" &
+REC=$!
+sleep 2
+set +e
+instrument flow -e class io.github.tombolinero.ordo.OrdoFlowTest -e ordoDemo true
+RESULT=$?
+set -e
+sleep 2
+# Stop the recorder on the device so it finalises the MP4 properly.
+adb shell pkill -INT screenrecord || true
+wait $REC 2>/dev/null || true
+sleep 2
+adb pull /sdcard/ordo-demo.mp4 out/ordo-demo.mp4 || true
+adb exec-out screencap -p > out/last-screen.png || true
+echo "::endgroup::"
+if [ "$RESULT" -ne 0 ]; then exit "$RESULT"; fi
+
+echo "::group::Shrunk release build starts and survives random input"
+CHECK=io.github.tombolinero.ordo.check
+adb install -r minified.apk
+adb logcat -c
+adb shell am start -W -n $CHECK/io.github.tombolinero.ordo.MainActivity | tee out/minified-start.txt
+sleep 3
+# Taps and swipes only: other event types (trackball, system keys, rotation) mostly fail to
+# inject on emulators and say nothing about the app.
+# (Touch + motion = 100 %, so every other event type gets 0 %.)
+adb shell monkey -p $CHECK --throttle 200 -s 42 --pct-touch 65 --pct-motion 35 400 | tee out/monkey.txt || true
+adb logcat -d > out/logcat-minified.txt
+if grep -E "FATAL EXCEPTION|ANR in $CHECK" out/logcat-minified.txt; then
+  echo "::error::The shrunk release build crashed (see out/logcat-minified.txt)"; exit 1
+fi
+adb uninstall $CHECK || true
+echo "::endgroup::"
+

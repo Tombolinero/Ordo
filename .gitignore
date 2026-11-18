@@ -1,0 +1,20 @@
+# Gradle / build
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local config — never commit
+local.properties
+keystore.properties
+*.jks
+*.keystore
+!app/debug.keystore

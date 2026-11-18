@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="section_backup">Backup</string>
+    <string name="backup_create">Create backup</string>
+    <string name="backup_create_hint">One file with all lists, entries, notes and pictures. Keep it somewhere safe, e.g. in your cloud.</string>
+    <string name="backup_restore">Restore backup</string>
+    <string name="backup_restore_hint">Load an .ordobackup file, e.g. on a new phone.</string>
+    <string name="backup_saving">Creating backup…</string>
+    <string name="backup_saved">Backup saved</string>
+    <string name="backup_failed">The backup could not be saved. Please try another location.</string>
+    <string name="restore_reading">Checking backup…</string>
+    <string name="restore_title">Restore backup?</string>
+    <string name="restore_summary">%1$d lists · %2$d entries · %3$d pictures</string>
+    <string name="restore_created">Created %s</string>
+    <string name="restore_newer">This backup comes from a newer version of Ordo. Lists, entries, pictures and notes come across completely; things newer versions added may be missing. Update Ordo to be sure.</string>
+    <string name="restore_replace">Replace everything</string>
+    <string name="restore_replace_hint">Your current lists are replaced by the backup.</string>
+    <string name="restore_merge">Merge</string>
+    <string name="restore_merge_hint">Adds what is missing; for the same entry the newer version wins. Your order stays as it is.</string>
+    <string name="restore_safety">Before restoring, Ordo saves your current state, so you can go back.</string>
+    <string name="restore_done">Backup restored</string>
+    <string name="restore_error_not_backup">This file is not an Ordo backup.</string>
+    <string name="restore_error_damaged">This backup is damaged and was not restored. Your lists are unchanged.</string>
+    <string name="restore_error_newer">This backup needs a newer version of Ordo. Please update the app first.</string>
+    <string name="restore_error_large">This backup is too large to restore.</string>
+    <string name="restore_error_generic">The backup could not be read.</string>
+    <string name="section_trash">Trash</string>
+    <string name="trash_hint">Deleted lists and entries stay here for 30 days.</string>
+    <string name="section_language">Language</string>
+    <string name="language_hint">Ordo follows your phone’s language. You can choose a different one for Ordo only.</string>
+    <string name="language_open">Change language</string>
+    <string name="section_about">About Ordo</string>
+    <string name="about_version">Version %s</string>
+    <string name="about_license">Free software under the GNU GPL v3</string>
+    <string name="about_source">Source code on GitHub</string>
+    <string name="trash_title">Trash</string>
+    <string name="trash_empty_title">Trash is empty</string>
+    <string name="trash_empty_hint">Deleted lists and entries show up here for 30 days.</string>
+    <string name="trash_restore">Restore</string>
+    <string name="trash_delete_forever">Delete forever</string>
+    <string name="trash_empty_action">Empty trash</string>
+    <string name="trash_empty_confirm">Delete everything in the trash forever? This cannot be undone.</string>
+    <string name="trash_list">List · %s</string>
+    <string name="trash_from">From “%s”</string>
+    <string name="trash_days_left">%d days left</string>
+</resources>

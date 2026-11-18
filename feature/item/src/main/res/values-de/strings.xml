@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="note">Notiz</string>
+    <string name="note_empty">Tippe, um eine Notiz zu schreiben</string>
+    <string name="not_placed">Noch nicht eingeordnet</string>
+    <string name="place_now">Jetzt einordnen</string>
+    <string name="shared_with">Teilt sich den Platz mit %s</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="edit_title">Eintrag bearbeiten</string>
+    <string name="replace">Neu einordnen</string>
+    <string name="to_inbox">Zurück zu „Noch nicht eingeordnet“</string>
+    <string name="title">Titel</string>
+    <string name="change_picture">Bild ändern</string>
+    <string name="add_picture">Bild hinzufügen</string>
+    <string name="remove_picture">Bild entfernen</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sort">Sortieren</string>
+    <string name="sort_mode">Sortier-Modus</string>
+    <string name="sort_hint">Am Griff ziehen. Über einem anderen Eintrag halten, um den Platz zu teilen.</string>
+    <string name="inbox_title">Noch nicht eingeordnet</string>
+    <string name="inbox_place">Einordnen</string>
+    <string name="moved">Auf Platz %d verschoben</string>
+    <string name="tied">Teilen sich jetzt Platz %d</string>
+    <string name="detached">Gleichstand aufgelöst</string>
+    <string name="item_trashed">„%s“ liegt im Papierkorb</string>
+    <string name="item_to_inbox">„%s“ ist wieder bei „Noch nicht eingeordnet“</string>
+    <string name="empty_title">Noch leer</string>
+    <string name="empty_hint">Füge mit dem gelben Button den ersten Eintrag hinzu.</string>
+    <string name="add_title">Neuer Eintrag</string>
+    <string name="field_title">Titel</string>
+    <string name="field_title_hint">z. B. Porsche Taycan</string>
+    <string name="field_note">Notiz</string>
+    <string name="field_note_hint">Warum dieser Platz? Alles, was dir einfällt.</string>
+    <string name="pick_image">Bild hinzufügen</string>
+    <string name="change_image">Bild ändern</string>
+    <string name="remove_image">Bild entfernen</string>
+    <string name="save_inbox">Später einordnen</string>
+    <string name="save_duel">Jetzt einordnen</string>
+    <string name="menu_edit_list">Liste bearbeiten</string>
+    <string name="menu_share">Als Bild teilen</string>
+    <string name="item_open">Öffnen</string>
+    <string name="item_replace">Neu einordnen</string>
+    <string name="item_to_inbox_action">Zurück zu „Noch nicht eingeordnet“</string>
+    <string name="resolve_tie">Gleichstand auflösen</string>
+    <string name="shared_place">geteilter Platz</string>
+    <string name="share_title">Rangliste teilen</string>
+    <string name="share_button">Teilen</string>
+    <string name="share_top">Top %d</string>
+    <string name="share_footer">Gerankt mit Ordo</string>
+</resources>

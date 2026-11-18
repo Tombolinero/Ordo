@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">My lists</string>
+    <string name="home_empty_title">No lists yet</string>
+    <string name="home_empty_hint">Tap the yellow button to start your first ranking.</string>
+    <string name="home_top">No. 1</string>
+    <string name="home_no_top">Nothing placed yet</string>
+    <string name="list_edit">Edit</string>
+    <string name="list_pin">Pin to top</string>
+    <string name="list_unpin">Unpin</string>
+    <string name="list_duplicate">Duplicate</string>
+    <string name="list_copy_suffix">(copy)</string>
+    <string name="list_trashed">“%s” moved to the trash</string>
+    <string name="list_duplicated">“%s” duplicated</string>
+</resources>

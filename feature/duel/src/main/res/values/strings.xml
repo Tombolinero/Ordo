@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="duel_title">Place entry</string>
+    <string name="duel_question">Which one do you like better?</string>
+    <string name="duel_equal">Equally good</string>
+    <string name="duel_back">Previous question</string>
+    <string name="duel_new">New</string>
+    <string name="duel_place">Place %d</string>
+    <string name="duel_more">+ %d more</string>
+    <string name="duel_result">Lands on</string>
+    <string name="duel_result_tie">Shares place %d</string>
+    <string name="duel_done">Done</string>
+    <string name="duel_left">At most %d more</string>
+</resources>
