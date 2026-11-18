@@ -3,6 +3,10 @@
 Alle nennenswerten Änderungen an Ordo. Der Release-Workflow übernimmt den Abschnitt der
 jeweiligen Version als Beschreibung des GitHub-Releases.
 
+## 1.0.1
+
+- Absturz beim Zuschneiden eines Bildes behoben: Wurde das Bild beim Zoomen genau so klein, dass es den Rahmen gerade ausfüllte, konnte die App beim Loslassen abstürzen.
+
 ## 1.0.0
 
 Erste Version.
