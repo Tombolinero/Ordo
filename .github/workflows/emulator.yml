@@ -51,6 +51,12 @@ jobs:
           ./gradlew :app:assembleMinifiedCheck -Pordo.version=0.0.2
           cp app/build/outputs/apk/minifiedCheck/app-minifiedCheck.apk minified.apk
 
+      - name: Release memory held by the build
+        run: |
+          ./gradlew --stop || true
+          pkill -f KotlinCompileDaemon || true
+          free -m
+
       # The emulator action downloads these itself, but without retries; a corrupt download
       # would fail the job for reasons unrelated to the app.
       - name: Install emulator and system image (with retries)
@@ -72,7 +78,7 @@ jobs:
           arch: x86_64
           profile: pixel_7
           disk-size: 4096M
-          ram-size: 4096M
+          ram-size: 3072M
           cores: 4
           disable-animations: false
           # Software GPU without Vulkan: the emulated Vulkan stack crashes the emulator when drawing

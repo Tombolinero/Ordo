@@ -4,6 +4,16 @@
 #   new.apk  – app built from this commit
 #   test.apk – instrumentation tests
 set -euo pipefail
+
+# If the emulator disappears, show why (host memory, kernel OOM killer, emulator crash reports).
+diagnose() {
+  echo "::group::Diagnostics"
+  free -m || true
+  sudo dmesg 2>/dev/null | grep -iE "oom|killed process|out of memory" | tail -20 || true
+  ls -la /tmp/android-*/ 2>/dev/null | tail -20 || true
+  echo "::endgroup::"
+}
+trap diagnose EXIT
 APP=io.github.tombolinero.ordo.debug
 RUNNER=$APP.test/androidx.test.runner.AndroidJUnitRunner
 mkdir -p out
@@ -24,8 +34,9 @@ instrument update-verify -e class io.github.tombolinero.ordo.UpdateTest#verify -
 echo "::endgroup::"
 
 echo "::group::End-to-end flow (recorded)"
+free -m
 adb shell pm clear $APP
-adb shell "screenrecord --bit-rate 8000000 /sdcard/ordo-demo.mp4" &
+adb shell "screenrecord --size 720x1600 --bit-rate 4000000 /sdcard/ordo-demo.mp4" &
 REC=$!
 sleep 2
 set +e
