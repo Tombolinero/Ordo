@@ -57,7 +57,7 @@ import io.github.tombolinero.ordo.core.ui.ordoViewModel
 import io.github.tombolinero.ordo.core.ui.rememberUndoState
 import java.time.LocalDate
 
-const val SOURCE_URL = "https://github.com/tombolinero/Tier-List-App"
+const val SOURCE_URL = "https://github.com/Tombolinero/Ordo"
 
 @Composable
 fun SettingsRoute(versionName: String, onBack: () -> Unit, onOpenTrash: () -> Unit) {

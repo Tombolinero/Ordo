@@ -89,19 +89,19 @@ Im Browser: Repository auf GitHub öffnen → **Settings** → **Secrets and var
 Alternativ per Terminal mit der GitHub-CLI (`sudo dnf install gh`, dann `gh auth login`):
 
 ```bash
-gh secret set ORDO_KEYSTORE_BASE64 --repo tombolinero/Tier-List-App < ~/ordo-signing/ordo-release.jks.b64
+gh secret set ORDO_KEYSTORE_BASE64 --repo Tombolinero/Ordo < ~/ordo-signing/ordo-release.jks.b64
 ```
 
 ```bash
-gh secret set ORDO_KEYSTORE_PASSWORD --repo tombolinero/Tier-List-App
+gh secret set ORDO_KEYSTORE_PASSWORD --repo Tombolinero/Ordo
 ```
 
 ```bash
-gh secret set ORDO_KEY_ALIAS --repo tombolinero/Tier-List-App --body ordo
+gh secret set ORDO_KEY_ALIAS --repo Tombolinero/Ordo --body ordo
 ```
 
 ```bash
-gh secret set ORDO_KEY_PASSWORD --repo tombolinero/Tier-List-App
+gh secret set ORDO_KEY_PASSWORD --repo Tombolinero/Ordo
 ```
 
 (`gh` fragt bei den Passwort-Befehlen nach dem Wert, er landet so nicht in deiner Shell-History.)
@@ -139,7 +139,7 @@ Der interne `versionCode` wird aus der Version berechnet:
 ## Obtainium auf dem Handy einrichten
 
 1. Obtainium installieren (z. B. über F-Droid oder die GitHub-Releases von Obtainium).
-2. **App hinzufügen** → Quell-URL: `https://github.com/tombolinero/Tier-List-App`
+2. **App hinzufügen** → Quell-URL: `https://github.com/Tombolinero/Ordo`
 3. Optional unter „APK-Filter": `Ordo-v.*\.apk`
 4. **Hinzufügen** → **Installieren**.
 

@@ -210,6 +210,6 @@ Kamera-Punkt mittig (Dynamic Island / Punch-hole). Höhe ~54 px.
 
 ## 5. Offene Punkte
 - Ziel-Plattform/Tech-Stack (Web/PWA, React Native/Expo, Flutter, SwiftUI).
-- Inhalt der App (die Referenz zeigt E-Bike/Energie-Daten; Repo heißt „Tier-List-App").
+- Inhalt der App: geklärt, Ranglisten-App „Ordo“ (siehe [DECISIONS.md](DECISIONS.md)).
 - Weitere Screens (Inhalt unter „Hiking Trip", Ziele der Bottom-Nav).
 - Toggle-An-Zustand und Light-Mode sind in den Referenzen nicht definiert.
