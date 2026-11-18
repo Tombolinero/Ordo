@@ -17,8 +17,19 @@ permissions:
 
 jobs:
   emulator:
+    name: Android ${{ matrix.api }} (${{ matrix.gpu }})
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Rendering fully inside the guest avoids the host-side GL translator, which crashed
+          # the emulator process when Ordo's UI (blurred shadows) was drawn.
+          - api: 34
+            gpu: guest
+          - api: 30
+            gpu: swiftshader_indirect
     steps:
       - uses: actions/checkout@v5
 
@@ -63,7 +74,7 @@ jobs:
         run: |
           SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           for i in 1 2 3 4; do
-            if yes | "$SDKM" --install emulator "system-images;android-34;google_apis;x86_64" > /dev/null; then
+            if yes | "$SDKM" --install emulator "system-images;android-${{ matrix.api }};google_apis;x86_64" > /dev/null; then
               ls "$ANDROID_HOME/emulator/emulator" && exit 0
             fi
             echo "Download failed, retry $i"; sleep $((i * 10))
@@ -73,7 +84,7 @@ jobs:
       - name: Run checks on the emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: ${{ matrix.api }}
           target: google_apis
           arch: x86_64
           profile: pixel_7
@@ -81,15 +92,13 @@ jobs:
           ram-size: 3072M
           cores: 4
           disable-animations: false
-          # Software GPU without Vulkan: the emulated Vulkan stack crashes the emulator when drawing
-          # blurred shadows (real devices render them on their GPU).
-          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -feature -Vulkan -noaudio -no-boot-anim
+          emulator-options: -no-snapshot -no-window -gpu ${{ matrix.gpu }} -feature -Vulkan -noaudio -no-boot-anim
           script: bash .github/scripts/emulator-checks.sh
 
       - name: Upload video and logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: emulator-results
+          name: emulator-results-android-${{ matrix.api }}
           path: out/
           retention-days: 14
