@@ -63,6 +63,27 @@ jobs:
           echo "$KS" | base64 -d > "$RUNNER_TEMP/ordo-release.jks"
           echo "ORDO_KEYSTORE_PATH=$RUNNER_TEMP/ordo-release.jks" >> "$GITHUB_ENV"
 
+      - name: Verify signing key
+        env:
+          STORE_PW: ${{ secrets.ORDO_KEYSTORE_PASSWORD }}
+          ALIAS: ${{ secrets.ORDO_KEY_ALIAS }}
+          KEY_PW: ${{ secrets.ORDO_KEY_PASSWORD }}
+        run: |
+          # Checks the four secrets against each other and says precisely what is wrong,
+          # without ever printing a secret.
+          KS="$ORDO_KEYSTORE_PATH"
+          if ! keytool -list -keystore "$KS" -storepass "$STORE_PW" > /dev/null 2>&1; then
+            echo "::error::ORDO_KEYSTORE_PASSWORD passt nicht zum Schlüssel (oder ORDO_KEYSTORE_BASE64 ist unvollständig kopiert). Siehe docs/RELEASING.md."; exit 1
+          fi
+          if ! keytool -list -keystore "$KS" -storepass "$STORE_PW" -alias "$ALIAS" > /dev/null 2>&1; then
+            echo "::error::ORDO_KEY_ALIAS stimmt nicht. Im Schlüssel vorhandene Aliase: $(keytool -list -keystore "$KS" -storepass "$STORE_PW" | grep -oE '^[^,]+, ' | tr -d ', ' | tr '\n' ' ')"; exit 1
+          fi
+          # PKCS12: the key password must equal the store password.
+          if ! keytool -exportcert -keystore "$KS" -storepass "$STORE_PW" -alias "$ALIAS" > /dev/null 2>&1 || [ "$KEY_PW" != "$STORE_PW" ]; then
+            echo "::error::ORDO_KEY_PASSWORD muss genau dasselbe Passwort sein wie ORDO_KEYSTORE_PASSWORD."; exit 1
+          fi
+          echo "Signatur-Schlüssel und Secrets passen zusammen."
+
       - name: Test
         run: ./gradlew testDebugUnitTest verifyRoborazziDebug -Pordo.version="$VERSION"
 
