@@ -17,9 +17,6 @@
     <string name="field_title_hint">e.g. Porsche Taycan</string>
     <string name="field_note">Note</string>
     <string name="field_note_hint">Why this place? Anything that comes to mind.</string>
-    <string name="pick_image">Add picture</string>
-    <string name="change_image">Change picture</string>
-    <string name="remove_image">Remove picture</string>
     <string name="save_inbox">Place later</string>
     <string name="save_duel">Place now</string>
     <string name="menu_edit_list">Edit list</string>

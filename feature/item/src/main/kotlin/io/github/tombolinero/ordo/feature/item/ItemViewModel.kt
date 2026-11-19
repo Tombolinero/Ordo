@@ -8,6 +8,8 @@ import io.github.tombolinero.ordo.core.model.ItemId
 import io.github.tombolinero.ordo.core.model.ListId
 import io.github.tombolinero.ordo.core.model.RankItem
 import io.github.tombolinero.ordo.core.model.RankedList
+import io.github.tombolinero.ordo.core.ui.PictureDraft
+import io.github.tombolinero.ordo.core.ui.importPictures
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -34,14 +36,7 @@ class ItemViewModel(private val graph: DataGraph, listId: ListId) : ViewModel() 
 
     fun update(context: Context, item: RankItem, title: String, note: String, pictures: List<PictureDraft>, cover: Int) =
         viewModelScope.launch {
-            val ids = pictures.map { p ->
-                when (p) {
-                    is PictureDraft.Stored -> p.id
-                    is PictureDraft.Picked -> runCatching { graph.images.import(context, p.uri, p.crop) }.getOrNull()
-                }
-            }
-            val coverId = ids.getOrNull(cover) ?: ids.firstNotNullOfOrNull { it }
-            val images = ids.filterNotNull()
+            val (coverId, images) = graph.importPictures(context, pictures, cover)
             repository.updateItem(item.id, title, note, coverId, images)
             if (images != item.images) repository.cleanupImages()
         }

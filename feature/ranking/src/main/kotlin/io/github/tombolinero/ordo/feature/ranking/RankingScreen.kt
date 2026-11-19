@@ -172,9 +172,9 @@ internal fun RankingScreen(
     }
 
     if (adding) {
-        AddItemSheet(onDismiss = { adding = false }) { title, note, image, crop, placeNow ->
+        AddItemSheet(onDismiss = { adding = false }) { title, note, pictures, cover, placeNow ->
             adding = false
-            vm?.addItem(context, title, note, image, crop, placeNow, onNeedsDuel = onPlace)
+            vm?.addItem(context, title, note, pictures, cover, placeNow, onNeedsDuel = onPlace)
         }
     }
     if (menuOpen) {

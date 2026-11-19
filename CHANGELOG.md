@@ -3,6 +3,11 @@
 Alle nennenswerten Änderungen an Ordo. Der Release-Workflow übernimmt den Abschnitt der
 jeweiligen Version als Beschreibung des GitHub-Releases.
 
+## 1.1.1
+
+- Beim Anlegen eines neuen Eintrags kannst du jetzt direkt mehrere Bilder hinzufügen und das Titelbild wählen, genau wie beim Bearbeiten.
+- Die Knöpfe „Jetzt einordnen" und „Später einordnen" stehen untereinander, damit die Beschriftung nicht mehr abgeschnitten wird.
+
 ## 1.1.0
 
 - **Rematch**: Eine bestehende Liste komplett neu sortieren, nur mit „A oder B?"-Fragen. Praktisch, wenn sich deine Prioritäten geändert haben. Die bisherige Reihenfolge bleibt erhalten, bis du fertig bist, und lässt sich danach mit einem Tipp wiederherstellen. Zu finden im Menü einer Liste.

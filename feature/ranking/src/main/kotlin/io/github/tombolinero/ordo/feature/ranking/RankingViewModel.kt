@@ -1,17 +1,16 @@
 package io.github.tombolinero.ordo.feature.ranking
 
 import android.content.Context
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.tombolinero.ordo.core.data.CropRect
 import io.github.tombolinero.ordo.core.data.DataGraph
-import io.github.tombolinero.ordo.core.model.ImageId
 import io.github.tombolinero.ordo.core.model.ItemId
 import io.github.tombolinero.ordo.core.model.ListColor
 import io.github.tombolinero.ordo.core.model.ListId
 import io.github.tombolinero.ordo.core.model.RankedList
 import io.github.tombolinero.ordo.core.model.Ranking
+import io.github.tombolinero.ordo.core.ui.PictureDraft
+import io.github.tombolinero.ordo.core.ui.importPictures
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -112,14 +111,14 @@ class RankingViewModel(private val graph: DataGraph, private val listId: ListId)
         context: Context,
         title: String,
         note: String,
-        imageUri: Uri?,
-        crop: CropRect?,
+        pictures: List<PictureDraft>,
+        cover: Int,
         placeNow: Boolean,
         onNeedsDuel: (ItemId) -> Unit,
     ) = viewModelScope.launch {
-        val image: ImageId? = imageUri?.let { runCatching { graph.images.import(context, it, crop ?: CropRect.Full) }.getOrNull() }
+        val (image, images) = graph.importPictures(context, pictures, cover)
         val empty = current()?.places.isNullOrEmpty()
-        val id = repository.addItem(listId, title, note, image, placeIndex = if (placeNow && empty) 0 else null)
+        val id = repository.addItem(listId, title, note, image, placeIndex = if (placeNow && empty) 0 else null, images = images)
         if (placeNow && !empty) onNeedsDuel(id)
     }
 }

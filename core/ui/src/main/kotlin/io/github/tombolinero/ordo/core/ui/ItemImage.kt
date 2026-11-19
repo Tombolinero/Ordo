@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +28,9 @@ import io.github.tombolinero.ordo.core.designsystem.theme.Urbanist
 import io.github.tombolinero.ordo.core.model.ImageId
 import kotlin.math.absoluteValue
 
+/** Fade pictures in when they finish loading. Screenshot tests switch it off. */
+val LocalImageCrossfade = staticCompositionLocalOf { true }
+
 /**
  * An entry's picture. Without a picture it shows a soft gradient with the first letter,
  * coloured consistently per title so the list stays calm and recognisable.
@@ -40,6 +44,7 @@ fun ItemImage(
     shape: Shape = SmoothCornerShape(size * 0.32f),
 ) {
     val context = LocalContext.current
+    val fade = LocalImageCrossfade.current
     Box(modifier.size(size).clip(shape).placeholderFill(title), contentAlignment = Alignment.Center) {
         if (image == null) {
             Text(
@@ -50,7 +55,7 @@ fun ItemImage(
         } else {
             val file = remember(image) { context.dataGraph.images.file(image) }
             AsyncImage(
-                model = ImageRequest.Builder(context).data(file).crossfade(true).build(),
+                model = ImageRequest.Builder(context).data(file).crossfade(fade).build(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(size),
