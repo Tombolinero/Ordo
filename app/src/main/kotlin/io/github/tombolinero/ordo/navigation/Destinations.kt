@@ -7,6 +7,7 @@ import io.github.tombolinero.ordo.BuildConfig
 import io.github.tombolinero.ordo.core.model.ItemId
 import io.github.tombolinero.ordo.core.model.ListId
 import io.github.tombolinero.ordo.feature.duel.DuelRoute
+import io.github.tombolinero.ordo.feature.duel.RematchRoute
 import io.github.tombolinero.ordo.feature.item.ItemRoute
 import io.github.tombolinero.ordo.feature.ranking.RankingRoute
 import io.github.tombolinero.ordo.feature.search.SearchRoute
@@ -27,6 +28,7 @@ fun NavGraphBuilder.destinations(nav: NavHostController) {
             onOpenItem = { nav.navigate(ItemDestination(listId.value, it.value)) },
             onPlace = { nav.navigate(DuelDestination(listId.value, it.value)) },
             onOpenSettings = { nav.navigate(SettingsDestination) },
+            onRematch = { nav.navigate(RematchDestination(listId.value)) },
         )
     }
     screen<ItemDestination> { entry ->
@@ -41,6 +43,9 @@ fun NavGraphBuilder.destinations(nav: NavHostController) {
     screen<DuelDestination> { entry ->
         val route = entry.toRoute<DuelDestination>()
         DuelRoute(ListId(route.listId), ItemId(route.itemId), onClose = ::back)
+    }
+    screen<RematchDestination> { entry ->
+        RematchRoute(ListId(entry.toRoute<RematchDestination>().listId), onClose = ::back)
     }
     screen<SearchDestination> {
         SearchRoute(onBack = ::back, onOpenItem = { hit -> nav.navigate(ItemDestination(hit.list.id.value, hit.item.id.value)) })

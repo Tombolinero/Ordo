@@ -11,4 +11,20 @@
     <string name="duel_result_tie">Shares place %d</string>
     <string name="duel_done">Done</string>
     <string name="duel_left">At most %d more</string>
+    <string name="rematch_title">Rematch</string>
+    <string name="rematch_intro_title">Sort the whole list again</string>
+    <string name="rematch_intro_hint">You compare two entries at a time. Your current order stays until you finish, so you can stop at any point.</string>
+    <string name="rematch_count">%1$d entries · at most %2$d questions</string>
+    <string name="rematch_start">Start</string>
+    <string name="rematch_progress">%1$d of %2$d placed</string>
+    <string name="rematch_stop_title">Stop the rematch?</string>
+    <string name="rematch_stop_hint">Your list keeps its previous order.</string>
+    <string name="rematch_stop">Stop</string>
+    <string name="rematch_continue">Continue</string>
+    <string name="rematch_done">New order saved</string>
+    <string name="rematch_restore">Restore previous order</string>
+    <string name="rematch_restored">Previous order restored</string>
+    <string name="rematch_option_a">Option A</string>
+    <string name="rematch_option_b">Option B</string>
+    <string name="rematch_too_small">A rematch needs at least two entries.</string>
 </resources>

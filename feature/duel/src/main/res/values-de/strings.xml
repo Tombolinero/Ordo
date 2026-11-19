@@ -11,4 +11,20 @@
     <string name="duel_result_tie">Teilt sich Platz %d</string>
     <string name="duel_done">Fertig</string>
     <string name="duel_left">Noch höchstens %d</string>
+    <string name="rematch_title">Rematch</string>
+    <string name="rematch_intro_title">Die ganze Liste neu sortieren</string>
+    <string name="rematch_intro_hint">Du vergleichst immer zwei Einträge. Deine bisherige Reihenfolge bleibt, bis du fertig bist, du kannst also jederzeit aufhören.</string>
+    <string name="rematch_count">%1$d Einträge · höchstens %2$d Fragen</string>
+    <string name="rematch_start">Starten</string>
+    <string name="rematch_progress">%1$d von %2$d eingeordnet</string>
+    <string name="rematch_stop_title">Rematch abbrechen?</string>
+    <string name="rematch_stop_hint">Deine Liste behält ihre bisherige Reihenfolge.</string>
+    <string name="rematch_stop">Abbrechen</string>
+    <string name="rematch_continue">Weitermachen</string>
+    <string name="rematch_done">Neue Reihenfolge gespeichert</string>
+    <string name="rematch_restore">Vorherige Reihenfolge wiederherstellen</string>
+    <string name="rematch_restored">Vorherige Reihenfolge wiederhergestellt</string>
+    <string name="rematch_option_a">Option A</string>
+    <string name="rematch_option_b">Option B</string>
+    <string name="rematch_too_small">Für ein Rematch braucht die Liste mindestens zwei Einträge.</string>
 </resources>

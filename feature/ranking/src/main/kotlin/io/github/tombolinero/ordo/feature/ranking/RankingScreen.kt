@@ -75,10 +75,11 @@ fun RankingRoute(
     onOpenItem: (ItemId) -> Unit,
     onPlace: (ItemId) -> Unit,
     onOpenSettings: () -> Unit,
+    onRematch: () -> Unit = {},
 ) {
     val vm = ordoViewModel(key = listId.value) { RankingViewModel(it, listId) }
     val state by vm.state.collectAsStateWithLifecycle()
-    RankingScreen(state, vm, onBack, onOpenItem, onPlace, onOpenSettings)
+    RankingScreen(state, vm, onBack, onOpenItem, onPlace, onOpenSettings, onRematch)
 }
 
 @Composable
@@ -89,6 +90,7 @@ internal fun RankingScreen(
     onOpenItem: (ItemId) -> Unit,
     onPlace: (ItemId) -> Unit,
     onOpenSettings: () -> Unit,
+    onRematch: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var sharing by remember { mutableStateOf(false) }
@@ -181,6 +183,7 @@ internal fun RankingScreen(
                 list?.list?.title,
                 listOf(
                     SheetAction(OrdoIcons.Sort, stringResource(R.string.sort)) { menuOpen = false; vm?.setSorting(true) },
+                    SheetAction(OrdoIcons.Duel, stringResource(R.string.menu_rematch)) { menuOpen = false; onRematch() },
                     SheetAction(OrdoIcons.Edit, stringResource(R.string.menu_edit_list)) { menuOpen = false; editingList = true },
                     SheetAction(OrdoIcons.Share, stringResource(R.string.menu_share)) { menuOpen = false; sharing = true },
                     SheetAction(OrdoIcons.Settings, stringResource(UiR.string.nav_settings)) { menuOpen = false; onOpenSettings() },
