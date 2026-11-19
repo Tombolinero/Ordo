@@ -15,3 +15,5 @@ import kotlinx.serialization.Serializable
 @Serializable data object SettingsDestination
 
 @Serializable data object TrashDestination
+
+@Serializable data class RematchDestination(val listId: String)

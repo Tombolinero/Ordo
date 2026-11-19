@@ -36,10 +36,13 @@ data class RankItem(
     val listId: ListId,
     val title: String,
     val note: String = "",
+    /** Cover picture, shown in the list. Always one of [images]. */
     val image: ImageId? = null,
     val createdAt: Long,
     val updatedAt: Long,
     val deletedAt: Long? = null,
+    /** All pictures in display order (only visible on the entry's page). */
+    val images: List<ImageId> = listOfNotNull(image),
 )
 
 /** A list with its live entries and their order. */

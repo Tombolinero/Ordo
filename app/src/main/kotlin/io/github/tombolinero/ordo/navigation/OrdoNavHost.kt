@@ -26,7 +26,8 @@ import io.github.tombolinero.ordo.core.ui.LocalSharedTransitionScope
 import io.github.tombolinero.ordo.feature.lists.HomeRoute
 
 /**
- * Screen transitions: the new screen glides in from the right on a soft spring while the
+ * Screen transitions (identical for the back button and the back gesture, which follows the
+ * finger): the new screen glides in from the right on a soft spring while the
  * old one drifts a little to the left and dims; going back mirrors it (and follows the
  * finger with predictive back). Elements marked as shared morph between the screens.
  */
@@ -49,6 +50,10 @@ fun OrdoNavHost(openList: String? = null, onListOpened: () -> Unit = {}) {
                 exitTransition = { exit() },
                 popEnterTransition = { popEnter() },
                 popExitTransition = { popExit() },
+                // The Android back gesture uses its own transition slots; without these the
+                // library default shrinks the page into a small window while you swipe.
+                predictivePopEnterTransition = { gestureEnter() },
+                predictivePopExitTransition = { gestureExit() },
             ) {
                 screen<HomeDestination> {
                     HomeRoute(
@@ -82,3 +87,11 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.popEnter(): EnterT
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.popExit(): ExitTransition =
     slideOutHorizontally(OrdoMotion.fluid(IntOffset.VisibilityThreshold)) { it } +
         scaleOut(OrdoMotion.fluid(), targetScale = 0.96f) + fadeOut(OrdoMotion.smooth())
+
+// Back gesture: the page stays opaque and follows the finger to the right, the screen below
+// glides in from slightly left. No cross-fade, so the two screens never show through each other.
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.gestureEnter(): EnterTransition =
+    slideInHorizontally(OrdoMotion.fluid(IntOffset.VisibilityThreshold)) { -it / 5 }
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.gestureExit(): ExitTransition =
+    slideOutHorizontally(OrdoMotion.fluid(IntOffset.VisibilityThreshold)) { it }

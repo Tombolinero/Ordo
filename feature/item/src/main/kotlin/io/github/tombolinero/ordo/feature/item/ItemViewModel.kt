@@ -1,10 +1,8 @@
 package io.github.tombolinero.ordo.feature.item
 
 import android.content.Context
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.tombolinero.ordo.core.data.CropRect
 import io.github.tombolinero.ordo.core.data.DataGraph
 import io.github.tombolinero.ordo.core.model.ItemId
 import io.github.tombolinero.ordo.core.model.ListId
@@ -34,15 +32,18 @@ class ItemViewModel(private val graph: DataGraph, listId: ListId) : ViewModel() 
         viewModelScope.launch { repository.updateItem(item.id, item.title, note, item.image) }
     }
 
-    fun update(context: Context, item: RankItem, title: String, note: String, newImage: Uri?, crop: CropRect?, removeImage: Boolean) =
+    fun update(context: Context, item: RankItem, title: String, note: String, pictures: List<PictureDraft>, cover: Int) =
         viewModelScope.launch {
-            val image = when {
-                newImage != null -> runCatching { graph.images.import(context, newImage, crop ?: CropRect.Full) }.getOrNull() ?: item.image
-                removeImage -> null
-                else -> item.image
+            val ids = pictures.map { p ->
+                when (p) {
+                    is PictureDraft.Stored -> p.id
+                    is PictureDraft.Picked -> runCatching { graph.images.import(context, p.uri, p.crop) }.getOrNull()
+                }
             }
-            repository.updateItem(item.id, title, note, image)
-            if (image != item.image) repository.cleanupImages()
+            val coverId = ids.getOrNull(cover) ?: ids.firstNotNullOfOrNull { it }
+            val images = ids.filterNotNull()
+            repository.updateItem(item.id, title, note, coverId, images)
+            if (images != item.images) repository.cleanupImages()
         }
 
     fun moveToInbox(item: ItemId) = viewModelScope.launch {

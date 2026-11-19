@@ -27,11 +27,12 @@ Urlaubsziele, was auch immer. Statt starrer S/A/B-Stufen sortierst du deine Eint
 Platz für Platz.
 
 - **Beliebig viele Listen**, jede mit eigener Kartenfarbe, anpinnen, duplizieren
-- **Einträge mit Titel, Bild und Notiz**, Bild wird beim Einfügen zugeschnitten
+- **Einträge mit Titel, Bildern und Notiz**, beliebig viele Bilder, eines davon ist das Titelbild
 - **Podium** für die Top 3, danach eine ruhige, kompakte Liste
 - **Sortier-Modus**: Verschieben nur, wenn du ihn einschaltest, damit beim Scrollen nichts verrutscht
 - **Geteilte Plätze**: einen Eintrag über einen anderen halten, und beide teilen sich den Platz
 - **Duell-Modus „A oder B?"**: die App findet den richtigen Platz für neue Einträge (bei 100 Einträgen reichen 7 Fragen)
+- **Rematch**: eine ganze Liste nur mit „A oder B?" neu sortieren, wenn sich deine Prioritäten ändern
 - **„Noch nicht eingeordnet"**: schnell sammeln, später sortieren
 - **Rückgängig** für jedes Verschieben und Löschen, **Papierkorb** für 30 Tage
 - **Suche** über alle Listen, **Als Bild teilen**, **Homescreen-Widget** mit den Top 3
@@ -47,8 +48,8 @@ Platz für Platz.
 ## English
 
 Ordo is an app for long, personal rankings. Instead of fixed S/A/B tiers you rank entries
-place by place, with pictures and notes, shared places (ties), a pairwise "A or B?" duel
-that finds the right place for new entries, an inbox for unplaced entries, undo, a 30-day
+place by place, with several pictures and notes, shared places (ties), a pairwise "A or B?" duel
+that finds the right place for new entries, a rematch that re-sorts a whole list, an inbox for unplaced entries, undo, a 30-day
 trash, search, share-as-image, a home screen widget and forward-compatible backups.
 Install and update it with Obtainium from this repository's releases.
 

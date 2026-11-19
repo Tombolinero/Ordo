@@ -12,6 +12,7 @@ import io.github.tombolinero.ordo.core.model.ListId
 import io.github.tombolinero.ordo.core.model.RankItem
 import io.github.tombolinero.ordo.core.model.RankList
 import io.github.tombolinero.ordo.core.model.Ranking
+import io.github.tombolinero.ordo.core.model.Rematch
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,5 +47,33 @@ class DuelScreenshotTest {
         compose.setContent { OrdoTheme { DuelScreen(state.copy(finalPlace = 6), {}, {}, {}) } }
         compose.mainClock.advanceTimeBy(3_000)
         compose.onRoot().captureRoboImage("src/test/screenshots/duel_result.png")
+    }
+
+    private val rematchState = RematchUiState(
+        list = state.list,
+        items = (items + newItem).associateBy { it.id },
+        previous = Ranking(items.map { Ranking.Place(listOf(it.id)) }, unranked = listOf(newItem.id)),
+    )
+
+    @Test fun rematchIntro() {
+        compose.setContent { OrdoTheme { RematchScreen(rematchState, {}, {}, {}, {}, {}) } }
+        compose.mainClock.advanceTimeBy(2_000)
+        compose.onRoot().captureRoboImage("src/test/screenshots/rematch_intro.png")
+    }
+
+    @Test fun rematchQuestion() {
+        var r = Rematch.start(items.map { it.id } + newItem.id)
+        repeat(6) { r = r.answer(if (it % 2 == 0) Duel.Answer.NewIsWorse else Duel.Answer.NewIsBetter) }
+        compose.setContent { OrdoTheme { RematchScreen(rematchState.copy(rematch = r), {}, {}, {}, {}, {}) } }
+        compose.mainClock.advanceTimeBy(2_000)
+        compose.onRoot().captureRoboImage("src/test/screenshots/rematch_question.png")
+    }
+
+    @Test fun rematchDone() {
+        var r = Rematch.start(items.map { it.id } + newItem.id)
+        while (!r.isFinished) r = r.answer(Duel.Answer.NewIsBetter)
+        compose.setContent { OrdoTheme { RematchScreen(rematchState.copy(rematch = r, saved = true), {}, {}, {}, {}, {}) } }
+        compose.mainClock.advanceTimeBy(2_000)
+        compose.onRoot().captureRoboImage("src/test/screenshots/rematch_done.png")
     }
 }

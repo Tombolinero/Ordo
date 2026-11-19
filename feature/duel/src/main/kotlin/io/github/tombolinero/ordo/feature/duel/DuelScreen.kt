@@ -152,7 +152,7 @@ private fun Question(state: DuelUiState, newItem: RankItem, onAnswer: (Duel.Answ
 }
 
 @Composable
-private fun Choice(label: String, items: List<RankItem>, style: PillowStyle, onClick: () -> Unit) {
+internal fun Choice(label: String, items: List<RankItem>, style: PillowStyle, onClick: () -> Unit) {
     val first = items.firstOrNull() ?: return
     val interaction = remember { MutableInteractionSource() }
     val haptics = LocalHapticFeedback.current

@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.github.tombolinero.ordo.core.database.OrdoDatabase
 import io.github.tombolinero.ordo.core.model.Clock
+import io.github.tombolinero.ordo.core.model.ImageId
 import io.github.tombolinero.ordo.core.model.ListColor
 import io.github.tombolinero.ordo.core.model.Retention
 import io.github.tombolinero.ordo.core.model.TrashEntry
@@ -49,6 +50,33 @@ class OrdoRepositoryTest {
         assertThat(ranked.ranking.placeOf(c)).isEqualTo(2)
         assertThat(ranked.ranking.placeOf(b)).isEqualTo(2)
         assertThat(ranked.ranking.placeOf(a)).isEqualTo(1)
+    }
+
+    @Test fun `cover always belongs to the pictures`() = runTest {
+        val list = repo.createList("L")
+        val (p1, p2, p3) = listOf(ImageId("p1"), ImageId("p2"), ImageId("p3"))
+        // No cover chosen: the first picture becomes the cover.
+        val a = repo.addItem(list, "A", images = listOf(p1, p2))
+        suspend fun item() = repo.observeRankedList(list).first()!!.item(a)
+        assertThat(item().image).isEqualTo(p1)
+
+        // Changing only the cover (old screens) keeps the other pictures in their slots.
+        repo.updateItem(a, "A", "", p3)
+        assertThat(item().images).containsExactly(p3, p2).inOrder()
+
+        // Removing the cover without a picture list removes just that picture.
+        repo.updateItem(a, "A", "", null)
+        assertThat(item().images).containsExactly(p2)
+        assertThat(item().image).isEqualTo(p2)
+
+        // Choosing another cover from the full list.
+        repo.updateItem(a, "A", "", p1, images = listOf(p1, p2))
+        assertThat(item().image).isEqualTo(p1)
+        assertThat(item().images).containsExactly(p1, p2).inOrder()
+
+        repo.updateItem(a, "A", "", null, images = emptyList())
+        assertThat(item().image).isNull()
+        assertThat(item().images).isEmpty()
     }
 
     @Test fun `trash and restore puts the entry back on its old place`() = runTest {

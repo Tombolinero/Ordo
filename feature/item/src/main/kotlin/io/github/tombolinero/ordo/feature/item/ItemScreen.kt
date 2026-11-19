@@ -94,7 +94,8 @@ internal fun ItemScreen(state: ItemUiState, startItem: ItemId, vm: ItemViewModel
             )
             HorizontalPager(pager, Modifier.weight(1f), beyondViewportPageCount = 1, key = { state.order[it].value }) { page ->
                 val item = list.items[state.order[page]] ?: return@HorizontalPager
-                ItemPage(list, item, vm, onPlace)
+                // Only the visible page morphs with the list; neighbours stay put.
+                ItemPage(list, item, vm, onPlace, shared = page == pager.currentPage)
             }
         }
     }
@@ -116,31 +117,36 @@ internal fun ItemScreen(state: ItemUiState, startItem: ItemId, vm: ItemViewModel
     }
     editing?.let { item ->
         val context = LocalContext.current
-        EditItemSheet(item, onDismiss = { editing = null }) { title, note, image, crop, remove ->
+        EditItemSheet(item, onDismiss = { editing = null }) { title, note, pictures, cover ->
             editing = null
-            vm?.update(context, item, title, note, image, crop, remove)
+            vm?.update(context, item, title, note, pictures, cover)
         }
     }
 }
 
 @Composable
-private fun ItemPage(list: RankedList, item: RankItem, vm: ItemViewModel?, onPlace: (ItemId) -> Unit) {
+private fun ItemPage(list: RankedList, item: RankItem, vm: ItemViewModel?, onPlace: (ItemId) -> Unit, shared: Boolean) {
     val placeIndex = list.ranking.indexOfPlace(item.id)
     val placed = placeIndex >= 0
     val placeCount = list.ranking.places.size
+    var viewing by remember { mutableStateOf<Int?>(null) }
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).imePadding().windowInsetsPadding(WindowInsets.navigationBars),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ItemImage(
             item.image, item.title, 220.dp,
-            Modifier.padding(top = 8.dp).sharedBounds(SharedKeys.itemImage(item.id.value)),
+            Modifier.padding(top = 8.dp).then(if (shared) Modifier.sharedBounds(SharedKeys.itemImage(item.id.value)) else Modifier)
+                .then(if (item.image != null) Modifier.clickable { viewing = item.images.indexOf(item.image).coerceAtLeast(0) } else Modifier),
             shape = SmoothCornerShape(44.dp),
         )
+        if (item.images.size > 1) {
+            PictureRow(item.images, item.image, item.title, onOpen = { viewing = it }, modifier = Modifier.padding(top = 14.dp))
+        }
         Spacer(Modifier.height(20.dp))
         Text(
             item.title,
-            Modifier.padding(horizontal = 28.dp).sharedBounds(SharedKeys.itemTitle(item.id.value)),
+            Modifier.padding(horizontal = 28.dp).then(if (shared) Modifier.sharedBounds(SharedKeys.itemTitle(item.id.value)) else Modifier),
             style = OrdoTheme.type.display,
             color = OrdoTheme.colors.textPrimary,
             textAlign = TextAlign.Center,
@@ -182,6 +188,7 @@ private fun ItemPage(list: RankedList, item: RankItem, vm: ItemViewModel?, onPla
         NoteCard(item, vm)
         Spacer(Modifier.height(40.dp))
     }
+    viewing?.let { PictureViewer(item.images, it) { viewing = null } }
 }
 
 /** The note, editable in place. Saves itself a moment after you stop typing. */

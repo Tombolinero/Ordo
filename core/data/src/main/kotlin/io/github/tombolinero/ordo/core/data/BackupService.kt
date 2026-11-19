@@ -10,6 +10,8 @@ import io.github.tombolinero.ordo.core.database.ItemEntity
 import io.github.tombolinero.ordo.core.database.ListEntity
 import io.github.tombolinero.ordo.core.database.OrdoDatabase
 import io.github.tombolinero.ordo.core.model.Clock
+import io.github.tombolinero.ordo.core.database.galleryIds
+import io.github.tombolinero.ordo.core.database.joinGallery
 import io.github.tombolinero.ordo.core.model.ImageId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -140,7 +142,7 @@ class BackupService(
                 if (li == null) {
                     db.items().upsert(bi.toEntity(bl.id).copy(place = null, placeOrder = inboxOrder++))
                 } else if (bi.updatedAt > li.updatedAt) {
-                    db.items().upsert(li.copy(title = bi.title, note = bi.note, imageId = bi.image?.removeSuffix(".webp"), updatedAt = bi.updatedAt, deletedAt = bi.deletedAt))
+                    db.items().upsert(li.copy(title = bi.title, note = bi.note, imageId = bi.image?.removeSuffix(".webp"), gallery = bi.galleryColumn(), updatedAt = bi.updatedAt, deletedAt = bi.deletedAt))
                 }
             }
         }
@@ -157,6 +159,7 @@ class BackupService(
                         BackupItem(
                             id = i.id, title = i.title, note = i.note, image = i.imageId?.let { ImageStore.fileName(ImageId(it)) },
                             place = i.place, placeOrder = i.placeOrder, createdAt = i.createdAt, updatedAt = i.updatedAt, deletedAt = i.deletedAt,
+                            images = galleryIds(i.gallery, i.imageId).map { ImageStore.fileName(ImageId(it)) },
                         )
                     },
                 )
@@ -167,5 +170,9 @@ class BackupService(
     private fun BackupList.toEntity() = ListEntity(id, title, description, color, pinned, sortOrder, createdAt, updatedAt, deletedAt)
 
     private fun BackupItem.toEntity(listId: String) =
-        ItemEntity(id, listId, title, note, image?.removeSuffix(".webp"), place, placeOrder, createdAt, updatedAt, deletedAt)
+        ItemEntity(id, listId, title, note, image?.removeSuffix(".webp"), place, placeOrder, createdAt, updatedAt, deletedAt, galleryColumn())
+
+    /** Backups before "images" existed only know the cover. */
+    private fun BackupItem.galleryColumn(): String =
+        joinGallery((images.ifEmpty { listOfNotNull(image) }).map { it.removeSuffix(".webp") })
 }

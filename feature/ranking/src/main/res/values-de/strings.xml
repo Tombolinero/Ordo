@@ -33,4 +33,5 @@
     <string name="share_button">Teilen</string>
     <string name="share_top">Top %d</string>
     <string name="share_footer">Gerankt mit Ordo</string>
+    <string name="menu_rematch">Rematch: alles neu sortieren</string>
 </resources>

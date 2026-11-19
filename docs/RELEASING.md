@@ -9,7 +9,7 @@ Sie ist für **Fedora Linux** geschrieben und braucht **kein Android Studio**.
 ## Wie das Ganze zusammenhängt
 
 ```
-Code auf main ──► GitHub Actions „Release" (du startest es) ──► testet, baut,
+Pull Request mergen ──► GitHub Actions „Release" (startet von selbst) ──► testet, baut,
 signiert mit deinem Schlüssel ──► GitHub Release „v1.2.0" mit Ordo-v1.2.0.apk
 ──► Obtainium sieht das neue Release ──► installiert es über die alte Version
 ```
@@ -119,9 +119,14 @@ auslesen, auch du nicht. Workflows aus Forks oder fremden Pull Requests bekommen
 
 ## Eine neue Version veröffentlichen
 
-1. Sicherstellen, dass `main` den gewünschten Stand hat (alle Prüfungen grün).
-2. Auf GitHub: **Actions** → **Release** → **Run workflow**.
-3. Version eintragen, z. B. `1.2.0` (Schema: `HAUPT.NEBEN.FIX`), und starten.
+**Automatisch beim Mergen.** Jeder Pull Request, der eine neue Version bringt, enthält oben
+in `CHANGELOG.md` eine neue Überschrift, z. B. `## 1.2.0`. Sobald du ihn auf `main` mergst,
+startet der Release-Workflow von selbst. Du musst nur noch mergen.
+
+- Steht oben eine Version, die es schon als Release gibt, passiert nichts (z. B. bei reinen
+  Doku-Änderungen).
+- Manuell geht es weiterhin: **Actions** → **Release** → **Run workflow** (Version leer
+  lassen = aus `CHANGELOG.md`).
 
 Der Workflow
 

@@ -77,6 +77,32 @@ class BackupServiceTest {
         assertThat(fresh.repo.observeTrash().first()).hasSize(1)
     }
 
+    @Test fun `several pictures per entry survive backup and merge`() = runTest {
+        val cars = old.repo.createList("Autos")
+        val front = old.sampleImage()
+        val side = old.sampleImage()
+        val back = old.sampleImage()
+        val a = old.repo.addItem(cars, "Taycan", image = side, placeIndex = 0, images = listOf(front, side, back))
+
+        fresh.backups.apply(fresh.backups.prepare(old.backup().inputStream()), BackupService.Mode.Replace, fresh.safety)
+        val item = fresh.repo.observeRankedList(cars).first()!!.item(a)
+        assertThat(item.image).isEqualTo(side)
+        assertThat(item.images).containsExactly(front, side, back).inOrder()
+        listOf(front, side, back).forEach { assertThat(fresh.images.file(it).exists()).isTrue() }
+
+        // Cleanup must keep gallery pictures, not only covers.
+        fresh.repo.cleanupImages()
+        listOf(front, side, back).forEach { assertThat(fresh.images.file(it).exists()).isTrue() }
+
+        // A newer edit with fewer pictures wins on merge.
+        now += 1000
+        old.repo.updateItem(a, "Taycan", "", front, images = listOf(front))
+        fresh.backups.apply(fresh.backups.prepare(old.backup().inputStream()), BackupService.Mode.Merge, fresh.safety)
+        val merged = fresh.repo.observeRankedList(cars).first()!!.item(a)
+        assertThat(merged.image).isEqualTo(front)
+        assertThat(merged.images).containsExactly(front)
+    }
+
     @Test fun `replace removes what is not in the backup, safety backup allows going back`() = runTest {
         old.repo.createList("Aus dem Backup")
         val local = fresh.repo.createList("Nur lokal")

@@ -62,7 +62,7 @@ object BackupArchive {
         appVersionCode: Int,
         createdAt: Instant = Instant.now(),
     ) {
-        val referenced = data.lists.flatMap { l -> l.items.mapNotNull { it.image } }.toSortedSet()
+        val referenced = data.lists.flatMap { l -> l.items.flatMap { listOfNotNull(it.image) + it.images } }.toSortedSet()
         val checksums = sortedMapOf<String, String>()
         var imageCount = 0
         ZipOutputStream(out).use { zip ->
