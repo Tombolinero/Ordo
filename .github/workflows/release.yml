@@ -1,11 +1,16 @@
 name: Release
 
+# Releases happen automatically when main gets a new version in CHANGELOG.md:
+# the first "## X.Y.Z" heading is the version. If tag vX.Y.Z already exists, nothing
+# happens. A manual run (Actions → Release → Run workflow) can still pass a version.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       version:
-        description: "Version (HAUPT.NEBEN.FIX), z. B. 1.2.0"
-        required: true
+        description: "Version (HAUPT.NEBEN.FIX), leer = aus CHANGELOG.md"
+        required: false
 
 concurrency:
   group: release
@@ -15,31 +20,53 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    name: Build, sign and publish
+  version:
+    name: Decide version
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    # Releases only from main.
     if: github.ref == 'refs/heads/main'
-    env:
-      VERSION: ${{ github.event.inputs.version }}
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      release: ${{ steps.v.outputs.release }}
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Validate version
+      - id: v
+        env:
+          INPUT: ${{ github.event.inputs.version }}
         run: |
-          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
-            echo "::error::Version muss HAUPT.NEBEN.FIX sein (z. B. 1.2.0), war: $VERSION"; exit 1
+          VERSION="$INPUT"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(grep -m1 -oE '^## [0-9]+\.[0-9]{1,2}\.[0-9]{1,2}' CHANGELOG.md | sed 's/^## //')
           fi
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
+            echo "::error::Keine gültige Version gefunden (oberste Überschrift in CHANGELOG.md muss '## HAUPT.NEBEN.FIX' sein)"; exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-            echo "::error::Tag v$VERSION existiert bereits"; exit 1
+            echo "Version $VERSION ist schon veröffentlicht – nichts zu tun."
+            echo "release=false" >> "$GITHUB_OUTPUT"; exit 0
           fi
           latest=$(git tag --list 'v*' --sort=-v:refname | head -n1 | sed 's/^v//')
           if [ -n "$latest" ] && [ "$(printf '%s\n%s\n' "$latest" "$VERSION" | sort -V | tail -n1)" != "$VERSION" ]; then
             echo "::error::$VERSION ist nicht neuer als die letzte Version $latest"; exit 1
           fi
+          echo "Veröffentliche Version $VERSION"
+          echo "release=true" >> "$GITHUB_OUTPUT"
+
+  release:
+    name: Build, sign and publish
+    needs: version
+    if: needs.version.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Check signing secrets
         env:

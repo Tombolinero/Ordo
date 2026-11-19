@@ -94,7 +94,8 @@ internal fun ItemScreen(state: ItemUiState, startItem: ItemId, vm: ItemViewModel
             )
             HorizontalPager(pager, Modifier.weight(1f), beyondViewportPageCount = 1, key = { state.order[it].value }) { page ->
                 val item = list.items[state.order[page]] ?: return@HorizontalPager
-                ItemPage(list, item, vm, onPlace)
+                // Only the visible page morphs with the list; neighbours stay put.
+                ItemPage(list, item, vm, onPlace, shared = page == pager.currentPage)
             }
         }
     }
@@ -124,7 +125,7 @@ internal fun ItemScreen(state: ItemUiState, startItem: ItemId, vm: ItemViewModel
 }
 
 @Composable
-private fun ItemPage(list: RankedList, item: RankItem, vm: ItemViewModel?, onPlace: (ItemId) -> Unit) {
+private fun ItemPage(list: RankedList, item: RankItem, vm: ItemViewModel?, onPlace: (ItemId) -> Unit, shared: Boolean) {
     val placeIndex = list.ranking.indexOfPlace(item.id)
     val placed = placeIndex >= 0
     val placeCount = list.ranking.places.size
@@ -134,13 +135,13 @@ private fun ItemPage(list: RankedList, item: RankItem, vm: ItemViewModel?, onPla
     ) {
         ItemImage(
             item.image, item.title, 220.dp,
-            Modifier.padding(top = 8.dp).sharedBounds(SharedKeys.itemImage(item.id.value)),
+            Modifier.padding(top = 8.dp).then(if (shared) Modifier.sharedBounds(SharedKeys.itemImage(item.id.value)) else Modifier),
             shape = SmoothCornerShape(44.dp),
         )
         Spacer(Modifier.height(20.dp))
         Text(
             item.title,
-            Modifier.padding(horizontal = 28.dp).sharedBounds(SharedKeys.itemTitle(item.id.value)),
+            Modifier.padding(horizontal = 28.dp).then(if (shared) Modifier.sharedBounds(SharedKeys.itemTitle(item.id.value)) else Modifier),
             style = OrdoTheme.type.display,
             color = OrdoTheme.colors.textPrimary,
             textAlign = TextAlign.Center,
