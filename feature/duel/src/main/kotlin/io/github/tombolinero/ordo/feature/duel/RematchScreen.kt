@@ -159,18 +159,18 @@ private fun Question(state: RematchUiState, r: Rematch, onAnswer: (Duel.Answer) 
             targetState = current.id,
             transitionSpec = { (slideInVertically(OrdoMotion.fluid(IntOffset.VisibilityThreshold)) { -it / 3 } + fadeIn(OrdoMotion.smooth())) togetherWith fadeOut(OrdoMotion.smooth()) },
             label = "a",
-        ) { _ ->
-            Choice(stringResource(R.string.rematch_option_a), listOf(current), state.list?.color?.pillow() ?: PillowStyle.Magenta) { onAnswer(Duel.Answer.NewIsBetter) }
+        ) { id ->
+            Choice(stringResource(R.string.rematch_option_a), listOfNotNull(state.items[id]), state.list?.color?.pillow() ?: PillowStyle.Magenta) { onAnswer(Duel.Answer.NewIsBetter) }
         }
         Spacer(Modifier.height(14.dp))
         GlassPillButton(stringResource(R.string.duel_equal), { onAnswer(Duel.Answer.Equal) }, icon = OrdoIcons.Merge)
         Spacer(Modifier.height(14.dp))
         AnimatedContent(
-            targetState = r.sorted.places[opponentPlace].items.first(),
+            targetState = r.sorted.places[opponentPlace].items,
             transitionSpec = { (slideInVertically(OrdoMotion.fluid(IntOffset.VisibilityThreshold)) { it / 3 } + fadeIn(OrdoMotion.smooth())) togetherWith (slideOutVertically(OrdoMotion.fluid(IntOffset.VisibilityThreshold)) { -it / 3 } + fadeOut(OrdoMotion.smooth())) },
             label = "b",
-        ) { _ ->
-            Choice(stringResource(R.string.rematch_option_b), r.sorted.places[opponentPlace].items.mapNotNull(state.items::get), PillowStyle.Graphite) { onAnswer(Duel.Answer.NewIsWorse) }
+        ) { ids ->
+            Choice(stringResource(R.string.rematch_option_b), ids.mapNotNull(state.items::get), PillowStyle.Graphite) { onAnswer(Duel.Answer.NewIsWorse) }
         }
         Spacer(Modifier.weight(1f))
         if (r.canUndo) GlassPillButton(stringResource(R.string.duel_back), onUndo, icon = OrdoIcons.Undo, modifier = Modifier.padding(bottom = 18.dp))

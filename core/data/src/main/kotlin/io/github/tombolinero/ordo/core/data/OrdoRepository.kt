@@ -140,11 +140,22 @@ class OrdoRepository(
     // ---------------------------------------------------------------- entries
 
     /** Adds an entry. It lands in the inbox ("not placed yet") unless [placeIndex] is given. */
-    suspend fun addItem(listId: ListId, title: String, note: String = "", image: ImageId? = null, placeIndex: Int? = null, asTie: Boolean = false): ItemId =
+    suspend fun addItem(
+        listId: ListId,
+        title: String,
+        note: String = "",
+        image: ImageId? = null,
+        placeIndex: Int? = null,
+        asTie: Boolean = false,
+        images: List<ImageId> = listOfNotNull(image),
+    ): ItemId =
         db.withTransaction {
             val now = clock.now()
             val id = ItemId.new()
-            items.upsert(ItemEntity(id.value, listId.value, title.trim(), note.trim(), image?.value, null, Int.MAX_VALUE, now, now, null))
+            val (cover, gallery) = Gallery.normalize(image, images)
+            items.upsert(
+                ItemEntity(id.value, listId.value, title.trim(), note.trim(), cover?.value, null, Int.MAX_VALUE, now, now, null, gallery),
+            )
             val ranking = currentRanking(listId)
             val updated = if (placeIndex == null) ranking else ranking.place(id, placeIndex.coerceIn(0, ranking.places.size), asTie)
             writeRanking(updated)
@@ -152,9 +163,18 @@ class OrdoRepository(
             id
         }
 
-    suspend fun updateItem(id: ItemId, title: String, note: String, image: ImageId?) {
+    /**
+     * Updates an entry. [images] is the full picture list in order; null keeps the current
+     * pictures (a changed [image] then takes the old cover's slot).
+     */
+    suspend fun updateItem(id: ItemId, title: String, note: String, image: ImageId?, images: List<ImageId>? = null) {
         val current = items.get(id.value) ?: return
-        items.upsert(current.copy(title = title.trim(), note = note.trim(), imageId = image?.value, updatedAt = clock.now()))
+        val old = current.toModel()
+        val list = images ?: Gallery.swapCover(old.images, old.image, image)
+        val (cover, gallery) = Gallery.normalize(image, list)
+        items.upsert(
+            current.copy(title = title.trim(), note = note.trim(), imageId = cover?.value, gallery = gallery, updatedAt = clock.now()),
+        )
         touchList(ListId(current.listId))
     }
 

@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase
 /**
  * Version history (never edit an old entry):
  *  1 – lists, items (places, ties, inbox, trash)
+ *  2 – items.gallery (several pictures per entry, image_id stays the cover)
  */
 @Database(
     entities = [ListEntity::class, ItemEntity::class],
@@ -19,11 +20,11 @@ abstract class OrdoDatabase : RoomDatabase() {
     abstract fun items(): ItemDao
 
     companion object {
-        const val VERSION = 1
+        const val VERSION = 2
         const val NAME = "ordo.db"
 
         /** Manual migrations, oldest first. Each one is covered by MigrationTest. */
-        val MIGRATIONS: Array<androidx.room.migration.Migration> = arrayOf()
+        val MIGRATIONS: Array<androidx.room.migration.Migration> = arrayOf(MIGRATION_1_2)
 
         fun create(context: Context, name: String? = NAME): OrdoDatabase {
             val builder = if (name == null) {

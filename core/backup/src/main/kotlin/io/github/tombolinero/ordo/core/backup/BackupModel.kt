@@ -68,6 +68,11 @@ data class BackupItem(
     val createdAt: Long = 0,
     val updatedAt: Long = 0,
     val deletedAt: Long? = null,
+    /**
+     * All pictures (file names inside images/) in display order, including [image] (the cover).
+     * Added in app 1.1.0 without a format change: older apps ignore it and keep the cover.
+     */
+    val images: List<String> = emptyList(),
 )
 
 /** Result of reading a backup. Images were already streamed to the caller's sink. */

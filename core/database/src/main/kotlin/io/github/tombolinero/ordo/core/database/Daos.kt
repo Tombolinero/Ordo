@@ -112,8 +112,12 @@ interface ItemDao {
     @Query("DELETE FROM items WHERE deleted_at IS NOT NULL AND deleted_at < :before")
     suspend fun purgeDeletedBefore(before: Long): Int
 
-    @Query("SELECT DISTINCT image_id FROM items WHERE image_id IS NOT NULL")
-    suspend fun referencedImageIds(): List<String>
+    @Query("SELECT image_id AS cover, gallery FROM items WHERE image_id IS NOT NULL OR gallery != ''")
+    suspend fun imageRows(): List<ImageRow>
+
+    /** Every picture still used by some entry (live or in the trash), covers and galleries. */
+    suspend fun referencedImageIds(): List<String> =
+        imageRows().flatMap { galleryIds(it.gallery, it.cover) + listOfNotNull(it.cover) }.distinct()
 
     @Query("DELETE FROM items")
     suspend fun deleteAll()

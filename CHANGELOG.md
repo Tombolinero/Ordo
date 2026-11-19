@@ -3,6 +3,13 @@
 Alle nennenswerten Änderungen an Ordo. Der Release-Workflow übernimmt den Abschnitt der
 jeweiligen Version als Beschreibung des GitHub-Releases.
 
+## 1.1.0
+
+- **Rematch**: Eine bestehende Liste komplett neu sortieren, nur mit „A oder B?"-Fragen. Praktisch, wenn sich deine Prioritäten geändert haben. Die bisherige Reihenfolge bleibt erhalten, bis du fertig bist, und lässt sich danach mit einem Tipp wiederherstellen. Zu finden im Menü einer Liste.
+- **Mehrere Bilder pro Eintrag**: Beim Bearbeiten beliebig viele Bilder hinzufügen. Ein Bild ist das Titelbild für die Liste (antippen zum Wechseln, gelber Stern). Auf der Seite des Eintrags siehst du alle Bilder als kleine Vorschau und kannst sie im Vollbild durchwischen.
+- Zurück-Geste von einem Eintrag zur Liste: Die Seite gleitet jetzt sauber zur Seite, statt in ein kleines Fenster zu schrumpfen.
+- Deine Daten werden beim Update automatisch übernommen. Backups aus 1.0 lassen sich weiterhin laden; Backups aus 1.1 lassen sich auch in 1.0 laden (dort dann nur mit Titelbild).
+
 ## 1.0.1
 
 - Absturz beim Zuschneiden eines Bildes behoben: Wurde das Bild beim Zoomen genau so klein, dass es den Rahmen gerade ausfüllte, konnte die App beim Loslassen abstürzen.

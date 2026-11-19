@@ -34,7 +34,9 @@ damit nachvollziehbar bleibt, warum die App so aussieht und funktioniert.
 | Listen, Einträge mit Titel/Bild/Notiz, Sortieren, Gleichstand, Backup | v1 |
 | Rückgängig, Suche, „Noch nicht eingeordnet", Bild zuschneiden, Listen gestalten, Papierkorb | v1 |
 | Duell-Modus „A oder B?", Als Bild teilen, Homescreen-Widget | v1 |
-| Optionale Abschnitte, Rang-Verlauf, Eigene Felder, Mehrere Bilder pro Eintrag | später |
+| Optionale Abschnitte, Rang-Verlauf, Eigene Felder | später |
+| Mehrere Bilder pro Eintrag (eines ist Titelbild, Galerie nur auf der Eintragsseite) | 1.1.0 |
+| Rematch: ganze Liste per „A oder B?" neu sortieren, alte Reihenfolge wiederherstellbar | 1.1.0 |
 | Bewertung 0–100, Automatisches Backup, App-Sperre | nein |
 
 ## Feinschliff (F1–F5)

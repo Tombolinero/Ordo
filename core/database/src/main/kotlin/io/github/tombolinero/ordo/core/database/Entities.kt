@@ -50,7 +50,14 @@ data class ItemEntity(
     @ColumnInfo(name = "created_at") val createdAt: Long,
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "deleted_at") val deletedAt: Long?,
+    /**
+     * All pictures of the entry in display order, ids joined with ",". Empty = only [imageId]
+     * (or none). [imageId] is the cover shown in the list and must be one of them. (v2)
+     */
+    @ColumnInfo(name = "gallery", defaultValue = "") val gallery: String = "",
 )
+
+data class ImageRow(val cover: String?, val gallery: String)
 
 /** Search result row. */
 data class ItemWithListRow(

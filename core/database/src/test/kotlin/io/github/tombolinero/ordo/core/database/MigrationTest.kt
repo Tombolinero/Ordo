@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class MigrationTest {
-    private val shippedVersions = listOf(1)
+    private val shippedVersions = listOf(1, 2)
 
     @get:Rule
     val helper = MigrationTestHelper(
@@ -43,14 +43,17 @@ class MigrationTest {
                 assertThat(it.getString(1)).isEqualTo("magenta")
                 assertThat(it.getInt(2)).isEqualTo(1)
             }
-            db.query("SELECT id, note, image_id, place FROM items ORDER BY id").use {
+            db.query("SELECT id, note, image_id, place, gallery FROM items ORDER BY id").use {
                 assertThat(it.count).isEqualTo(2)
                 it.moveToFirst()
                 assertThat(it.getString(1)).isEqualTo("Notiz")
                 assertThat(it.getString(2)).isEqualTo("img1")
                 assertThat(it.getInt(3)).isEqualTo(0)
+                // v2: the existing picture is the entry's only picture and stays the cover.
+                assertThat(galleryIds(it.getString(4), it.getString(2))).containsExactly("img1")
                 it.moveToNext()
                 assertThat(it.isNull(3)).isTrue()
+                assertThat(galleryIds(it.getString(4), null)).isEmpty()
             }
             db.close()
         }

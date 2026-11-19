@@ -42,7 +42,7 @@ erkannt und **nicht** eingespielt.
       "pinned": true, "sortOrder": 0, "createdAt": 1700000000000, "updatedAt": 1700000500000,
       "deletedAt": null,
       "items": [
-        { "id": "…", "title": "Koenigsegg Jesko", "note": "Über 1.600 PS", "image": "….webp",
+        { "id": "…", "title": "Koenigsegg Jesko", "note": "Über 1.600 PS", "image": "….webp", "images": ["….webp", "….webp"],
           "place": 0, "placeOrder": 0, "createdAt": …, "updatedAt": …, "deletedAt": null }
       ]
     }
@@ -92,3 +92,9 @@ Stands an, damit sich ein versehentliches Ersetzen rückgängig machen lässt.
 Backups sind nicht verschlüsselt. Bewahre sie so auf, wie du die Inhalte auch sonst
 aufbewahren würdest. Beim Einlesen gelten Grenzen für Dateigröße und Dateinamen, damit
 manipulierte Dateien nichts außerhalb des Backup-Ordners schreiben können.
+
+## Erweiterungen ohne Versionswechsel
+
+| App-Version | Feld | Bedeutung | Ältere Apps |
+|---|---|---|---|
+| 1.1.0 | `items[].images` | Alle Bilder des Eintrags in Reihenfolge, inklusive `image` (Titelbild) | ignorieren das Feld und behalten das Titelbild |

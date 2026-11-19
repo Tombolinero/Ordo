@@ -2,6 +2,7 @@ package io.github.tombolinero.ordo.core.data
 
 import io.github.tombolinero.ordo.core.database.ItemEntity
 import io.github.tombolinero.ordo.core.database.ListEntity
+import io.github.tombolinero.ordo.core.database.galleryIds
 import io.github.tombolinero.ordo.core.model.ImageId
 import io.github.tombolinero.ordo.core.model.ItemId
 import io.github.tombolinero.ordo.core.model.ListColor
@@ -23,6 +24,7 @@ internal fun RankList.toEntity() = ListEntity(
 internal fun ItemEntity.toModel() = RankItem(
     id = ItemId(id), listId = ListId(listId), title = title, note = note, image = imageId?.let(::ImageId),
     createdAt = createdAt, updatedAt = updatedAt, deletedAt = deletedAt,
+    images = galleryIds(gallery, imageId).map(::ImageId),
 )
 
 internal fun List<ItemEntity>.toRanking(): Ranking =
