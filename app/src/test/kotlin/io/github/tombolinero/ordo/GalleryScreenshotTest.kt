@@ -6,6 +6,7 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Shader
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
@@ -22,6 +23,7 @@ import io.github.tombolinero.ordo.core.model.ImageId
 import io.github.tombolinero.ordo.core.model.ItemId
 import io.github.tombolinero.ordo.core.model.ListColor
 import io.github.tombolinero.ordo.core.model.ListId
+import io.github.tombolinero.ordo.core.ui.LocalImageCrossfade
 import io.github.tombolinero.ordo.core.ui.OrdoAppGraph
 import io.github.tombolinero.ordo.navigation.OrdoNavHost
 import kotlinx.coroutines.flow.first
@@ -37,7 +39,8 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(qualifiers = "de-w393dp-h852dp-xxhdpi")
 class GalleryScreenshotTest {
-    @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule(order = 0) val images = ImmediateImages()
+    @get:Rule(order = 1) val compose = createAndroidComposeRule<ComponentActivity>()
 
     private val data get() = (ApplicationProvider.getApplicationContext<OrdoApp>() as OrdoAppGraph).data
 
@@ -66,7 +69,7 @@ class GalleryScreenshotTest {
 
     @Test fun galleryOnEntryPage() {
         seed()
-        compose.setContent { OrdoTheme { OrdoNavHost() } }
+        compose.setContent { CompositionLocalProvider(LocalImageCrossfade provides false) { OrdoTheme { OrdoNavHost() } } }
         compose.waitForIdle()
         compose.onAllNodesWithText("Beste E-Autos").onFirst().performClick()
         compose.waitForIdle()
@@ -92,7 +95,7 @@ class GalleryScreenshotTest {
         assertThat(stored.image).isEqualTo(pics[2])
         assertThat(stored.images).containsExactlyElementsIn(pics).inOrder()
 
-        compose.setContent { OrdoTheme { OrdoNavHost() } }
+        compose.setContent { CompositionLocalProvider(LocalImageCrossfade provides false) { OrdoTheme { OrdoNavHost() } } }
         compose.waitForIdle()
         compose.onAllNodesWithText("Beste E-Autos").onFirst().performClick()
         compose.waitForIdle()

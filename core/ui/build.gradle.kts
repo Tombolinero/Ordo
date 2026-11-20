@@ -15,4 +15,5 @@ dependencies {
     api(libs.androidx.lifecycle.runtime.compose)
     api(libs.coil.compose)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
 }

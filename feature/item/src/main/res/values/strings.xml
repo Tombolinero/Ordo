@@ -10,10 +10,4 @@
     <string name="replace">Place again</string>
     <string name="to_inbox">Back to “Not placed yet”</string>
     <string name="title">Title</string>
-    <string name="change_picture">Change picture</string>
-    <string name="add_picture">Add picture</string>
-    <string name="remove_picture">Remove picture</string>
-    <string name="cover">Cover</string>
-    <string name="pictures">Pictures</string>
-    <string name="pictures_hint">Tap a picture to make it the cover in the list.</string>
 </resources>

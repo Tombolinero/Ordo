@@ -41,4 +41,9 @@
     <string name="editor_description_hint">Optional</string>
     <string name="editor_color">Kartenfarbe</string>
     <string name="editor_create">Liste anlegen</string>
+    <string name="pictures">Bilder</string>
+    <string name="pictures_hint">Tippe ein Bild an, um es als Titelbild in der Liste zu nutzen.</string>
+    <string name="picture_cover">Titelbild</string>
+    <string name="picture_add">Bild hinzufügen</string>
+    <string name="picture_remove">Bild entfernen</string>
 </resources>

@@ -41,4 +41,9 @@
     <string name="editor_description_hint">Optional</string>
     <string name="editor_color">Card colour</string>
     <string name="editor_create">Create list</string>
+    <string name="pictures">Pictures</string>
+    <string name="pictures_hint">Tap a picture to make it the cover in the list.</string>
+    <string name="picture_cover">Cover</string>
+    <string name="picture_add">Add picture</string>
+    <string name="picture_remove">Remove picture</string>
 </resources>

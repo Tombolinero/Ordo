@@ -10,10 +10,4 @@
     <string name="replace">Neu einordnen</string>
     <string name="to_inbox">Zurück zu „Noch nicht eingeordnet“</string>
     <string name="title">Titel</string>
-    <string name="change_picture">Bild ändern</string>
-    <string name="add_picture">Bild hinzufügen</string>
-    <string name="remove_picture">Bild entfernen</string>
-    <string name="cover">Titelbild</string>
-    <string name="pictures">Bilder</string>
-    <string name="pictures_hint">Tippe ein Bild an, um es als Titelbild in der Liste zu nutzen.</string>
 </resources>

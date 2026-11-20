@@ -17,9 +17,6 @@
     <string name="field_title_hint">z. B. Porsche Taycan</string>
     <string name="field_note">Notiz</string>
     <string name="field_note_hint">Warum dieser Platz? Alles, was dir einfällt.</string>
-    <string name="pick_image">Bild hinzufügen</string>
-    <string name="change_image">Bild ändern</string>
-    <string name="remove_image">Bild entfernen</string>
     <string name="save_inbox">Später einordnen</string>
     <string name="save_duel">Jetzt einordnen</string>
     <string name="menu_edit_list">Liste bearbeiten</string>
