@@ -27,4 +27,5 @@
     <string name="rematch_option_a">Option A</string>
     <string name="rematch_option_b">Option B</string>
     <string name="rematch_too_small">Für ein Rematch braucht die Liste mindestens zwei Einträge.</string>
+    <string name="duel_view_pictures">Bilder ansehen</string>
 </resources>

@@ -24,6 +24,7 @@ object OrdoIcons {
     val Sort = line("sort", "M7 4v16M3.5 16.5 7 20l3.5-3.5", "M17 20V4M13.5 7.5 17 4l3.5 3.5")
     val Check = line("check", "M5 12.5l4.5 4.5L19 7.5")
     val Close = line("close", "M6 6l12 12M18 6 6 18")
+    val Expand = line("expand", "M14 4h6v6M20 4l-7 7", "M10 20H4v-6M4 20l7-7")
     val Star = line("star", "M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8Z")
     val Trash = line("trash", "M4 7h16M9.5 7V4.8h5V7", "M6.5 7l.9 12.2A1.5 1.5 0 0 0 8.9 20.6h6.2a1.5 1.5 0 0 0 1.5-1.4L17.5 7", "M10 11v6M14 11v6")
     val Image = line(

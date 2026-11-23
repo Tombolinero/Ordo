@@ -56,6 +56,7 @@ import io.github.tombolinero.ordo.core.ui.ActionList
 import io.github.tombolinero.ordo.core.ui.ItemImage
 import io.github.tombolinero.ordo.core.ui.OrdoSheet
 import io.github.tombolinero.ordo.core.ui.OrdoTextField
+import io.github.tombolinero.ordo.core.ui.PictureViewer
 import io.github.tombolinero.ordo.core.ui.R as UiR
 import io.github.tombolinero.ordo.core.ui.SharedKeys
 import io.github.tombolinero.ordo.core.ui.SheetAction
