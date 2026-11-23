@@ -1,5 +1,16 @@
 package io.github.tombolinero.ordo.feature.duel
 
+import io.github.tombolinero.ordo.core.ui.ViewerPicture
+import io.github.tombolinero.ordo.core.ui.PictureViewer
+import io.github.tombolinero.ordo.core.designsystem.shape.SmoothCornerShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.Icon
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.background
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.fadeIn
@@ -151,11 +162,20 @@ private fun Question(state: DuelUiState, newItem: RankItem, onAnswer: (Duel.Answ
     }
 }
 
+/**
+ * One side of the "A or B?" question. Tapping the card chooses it. Tapping its picture (or one
+ * of the small ones) opens the pictures full screen first, so you can look before deciding.
+ */
 @Composable
 internal fun Choice(label: String, items: List<RankItem>, style: PillowStyle, onClick: () -> Unit) {
     val first = items.firstOrNull() ?: return
     val interaction = remember { MutableInteractionSource() }
     val haptics = LocalHapticFeedback.current
+    // All pictures of this side (a shared place can hold several entries), cover first.
+    val pictures = remember(items) {
+        items.flatMap { item -> (listOfNotNull(item.image) + item.images).distinct().map { ViewerPicture(it, item.title) } }
+    }
+    var viewing by remember { mutableStateOf<Int?>(null) }
     PillowSurface(
         Modifier.fillMaxWidth().heightIn(min = 176.dp).pressScale(interaction, 0.97f),
         style = style,
@@ -172,7 +192,19 @@ internal fun Choice(label: String, items: List<RankItem>, style: PillowStyle, on
             Text(label.uppercase(), style = OrdoTheme.type.overline, color = OrdoTheme.colors.textSecondary)
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(18.dp)) {
-                ItemImage(first.image, first.title, 96.dp)
+                Box {
+                    val canView = pictures.isNotEmpty()
+                    ItemImage(
+                        first.image, first.title, 96.dp,
+                        if (canView) Modifier.clickable(onClickLabel = stringResource(R.string.duel_view_pictures)) { viewing = 0 } else Modifier,
+                    )
+                    if (canView) {
+                        Box(
+                            Modifier.align(Alignment.BottomEnd).padding(6.dp).size(26.dp).clip(CircleShape).background(Color.Black.copy(alpha = 0.55f)),
+                            contentAlignment = Alignment.Center,
+                        ) { Icon(OrdoIcons.Expand, null, Modifier.size(14.dp), tint = Color.White) }
+                    }
+                }
                 Column(Modifier.weight(1f)) {
                     Text(first.title, style = OrdoTheme.type.cardTitle, color = OrdoTheme.colors.textPrimary, maxLines = 2, overflow = TextOverflow.Ellipsis)
                     if (first.note.isNotBlank()) {
@@ -180,6 +212,30 @@ internal fun Choice(label: String, items: List<RankItem>, style: PillowStyle, on
                     }
                     if (items.size > 1) {
                         Text(stringResource(R.string.duel_more, items.size - 1), style = OrdoTheme.type.label, color = OrdoTheme.colors.accent, modifier = Modifier.padding(top = 6.dp))
+                    }
+                    if (pictures.size > 1) {
+                        Thumbnails(pictures, Modifier.padding(top = 10.dp)) { viewing = it }
+                    }
+                }
+            }
+        }
+    }
+    viewing?.let { PictureViewer(pictures, it, onClose = { viewing = null }) }
+}
+
+/** Small previews of the further pictures; the last one says how many more there are. */
+@Composable
+private fun Thumbnails(pictures: List<ViewerPicture>, modifier: Modifier, onOpen: (Int) -> Unit) {
+    val shown = 4
+    Row(modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        pictures.drop(1).take(shown).forEachIndexed { i, p ->
+            val index = i + 1
+            val rest = pictures.size - 1 - shown
+            Box(contentAlignment = Alignment.Center) {
+                ItemImage(p.id, p.caption, 34.dp, Modifier.clickable { onOpen(index) }, shape = SmoothCornerShape(10.dp))
+                if (i == shown - 1 && rest > 0) {
+                    Box(Modifier.size(34.dp).clip(SmoothCornerShape(10.dp)).background(Color.Black.copy(alpha = 0.55f)), contentAlignment = Alignment.Center) {
+                        Text("+$rest", style = OrdoTheme.type.meta, color = Color.White)
                     }
                 }
             }

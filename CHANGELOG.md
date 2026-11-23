@@ -3,6 +3,11 @@
 Alle nennenswerten Änderungen an Ordo. Der Release-Workflow übernimmt den Abschnitt der
 jeweiligen Version als Beschreibung des GitHub-Releases.
 
+## 1.2.0
+
+- **Bilder im A/B-Vergleich**: Beim Einordnen und beim Rematch siehst du jetzt alle Bilder beider Einträge. Ein Tipp auf ein Bild öffnet es im Vollbild, bevor du dich entscheidest; der Tipp zählt nicht als Antwort. Weitere Bilder erscheinen als kleine Vorschau neben dem Titel.
+- **Bilder vergrößern**: In der Vollbild-Ansicht kannst du mit zwei Fingern zoomen oder doppelt tippen. Das gilt auch für die Bilder auf der Seite eines Eintrags.
+
 ## 1.1.1
 
 - Beim Anlegen eines neuen Eintrags kannst du jetzt direkt mehrere Bilder hinzufügen und das Titelbild wählen, genau wie beim Bearbeiten.
